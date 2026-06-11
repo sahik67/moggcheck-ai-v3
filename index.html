@@ -933,7 +933,7 @@ function computeAll(lms, imgEl, gender){
 
   // 12 Cheekbone
   const cheekR=bizygW/bigonW
-  const cheekScore=(cheekR>=1.15&&cheekR<=1.35)?10.0:clamp(10-Math.abs(cheekR-1.25)*15)
+  const cheekScore=(cheekR>=1.22&&cheekR<=1.30)?10.0:clamp(10-Math.abs(cheekR-1.26)*20)
 
   // 13 Facial thirds
   const t1=Math.abs(px[10].y-px[66].y),t2=Math.abs(px[66].y-px[1].y),t3=Math.abs(px[1].y-px[152].y)
