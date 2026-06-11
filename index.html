@@ -232,7 +232,7 @@ footer a:hover{color:var(--text)}
 <div class="crack-overlay" id="crackOverlay"></div>
 
 <!-- SECTION 1: GENDER -->
-<section id="s1" class="section active">
+<section id="s1" class="section active" style="overflow-y:auto;padding-bottom:4rem">
   <div class="logo-pill">MoggCheck AI · Face Analysis</div>
   <h1 class="s1-headline">Discover Your True<br><span class="grad">Looksmaxxing Tier</span></h1>
   <p class="s1-sub">AI facial mapping. Bone structure. Ratios. Real Results. No guessing.</p>
@@ -252,6 +252,57 @@ footer a:hover{color:var(--text)}
     <div class="trust-badge">📱 Works on Any Device</div>
     <div class="trust-badge">🎯 AI Facial Mapping</div>
     <div class="trust-badge">⚡ Instant Results</div>
+  </div>
+
+  <!-- Photo Guide -->
+  <div style="margin-top:3rem;width:100%;max-width:900px">
+    <h2 style="text-align:center;margin-bottom:1.5rem;font-size:1.5rem;color:#fff">📸 How to Take the Perfect Photo</h2>
+    <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1.5rem">
+      <div style="background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:1.5rem;display:flex;gap:1rem">
+        <div style="width:48px;height:48px;background:linear-gradient(135deg,#A78BFA,#EC4899);border-radius:12px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:1.25rem;flex-shrink:0">1</div>
+        <div>
+          <h3 style="font-size:1rem;margin-bottom:.5rem;color:#fff">Front-Facing Only</h3>
+          <p style="font-size:.85rem;color:var(--sub);margin:0">Look directly at the camera. No angles, no tilts.</p>
+        </div>
+      </div>
+      <div style="background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:1.5rem;display:flex;gap:1rem">
+        <div style="width:48px;height:48px;background:linear-gradient(135deg,#A78BFA,#EC4899);border-radius:12px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:1.25rem;flex-shrink:0">2</div>
+        <div>
+          <h3 style="font-size:1rem;margin-bottom:.5rem;color:#fff">Good Lighting</h3>
+          <p style="font-size:.85rem;color:var(--sub);margin:0">Natural light works best. Avoid harsh shadows.</p>
+        </div>
+      </div>
+      <div style="background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:1.5rem;display:flex;gap:1rem">
+        <div style="width:48px;height:48px;background:linear-gradient(135deg,#A78BFA,#EC4899);border-radius:12px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:1.25rem;flex-shrink:0">3</div>
+        <div>
+          <h3 style="font-size:1rem;margin-bottom:.5rem;color:#fff">Remove Glasses & Hats</h3>
+          <p style="font-size:.85rem;color:var(--sub);margin:0">Make sure your full face is visible.</p>
+        </div>
+      </div>
+      <div style="background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:1.5rem;display:flex;gap:1rem">
+        <div style="width:48px;height:48px;background:linear-gradient(135deg,#A78BFA,#EC4899);border-radius:12px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:1.25rem;flex-shrink:0">4</div>
+        <div>
+          <h3 style="font-size:1rem;margin-bottom:.5rem;color:#fff">Neutral Expression</h3>
+          <p style="font-size:.85rem;color:var(--sub);margin:0">Relax your face, no big smiles!</p>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Example Images Grid -->
+    <div style="margin-top:1.5rem;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1rem">
+      <div style="text-align:center">
+        <img src="examples-pics/perfect-submission.png" style="width:100%;border-radius:12px;border:1px solid #334155" alt="Perfect">
+        <p style="color:#10B981;font-weight:700;margin-top:.5rem;font-size:.85rem">✅ Perfect</p>
+      </div>
+      <div style="text-align:center">
+        <img src="examples-pics/bad-angles.png" style="width:100%;border-radius:12px;border:1px solid #334155" alt="Bad Angle">
+        <p style="color:#EF4444;font-weight:700;margin-top:.5rem;font-size:.85rem">❌ Bad Angle</p>
+      </div>
+      <div style="text-align:center">
+        <img src="examples-pics/bad-expression.png" style="width:100%;border-radius:12px;border:1px solid #334155" alt="Bad Expression">
+        <p style="color:#EF4444;font-weight:700;margin-top:.5rem;font-size:.85rem">❌ Bad Expression</p>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -318,6 +369,7 @@ footer a:hover{color:var(--text)}
     <div class="tip"><span class="tip-check">✓</span> Front-facing photo</div>
     <div class="tip"><span class="tip-check">✓</span> Good lighting</div>
     <div class="tip"><span class="tip-check">✓</span> No glasses if possible</div>
+    <a href="#" class="tip" onclick="event.preventDefault();openLegal('photo-guide')" style="cursor:pointer;text-decoration:underline;color:#A78BFA">📸 Open Photo Guide</a>
   </div>
 </section>
 
@@ -463,20 +515,21 @@ footer a:hover{color:var(--text)}
   </div>
 </div>
 
-<footer id="mainFooter" style="display:none">
+<footer id="mainFooter">
   <div class="footer-social">
-    <a href="https://instagram.com/moggcheck" target="_blank" class="social-icon">📷</a>
-    <a href="https://tiktok.com/@moggcheck" target="_blank" class="social-icon">🎵</a>
-    <a href="https://twitter.com/moggcheck" target="_blank" class="social-icon">𝕏</a>
+    <a href="https://instagram.com/moggcheck" target="_blank" class="social-icon"><img src="footer-icons/3721672-instagram_108066.ico" height="24" alt="Instagram" /></a>
+    <a href="https://tiktok.com/@moggcheck" target="_blank" class="social-icon"><img src="footer-icons/tiktok_logo_icon_186896.ico" height="24" alt="TikTok" /></a>
+    <a href="https://twitter.com/moggcheck" target="_blank" class="social-icon"><img src="footer-icons/twitter_x_logo_icon_258917.ico" height="24" alt="X" /></a>
   </div>
   <div class="footer-links">
     <a href="#" onclick="openLegal('about')">About</a>
     <a href="#" onclick="openLegal('privacy')">Privacy</a>
     <a href="#" onclick="openLegal('terms')">Terms</a>
     <a href="#" onclick="openLegal('tier')">Tier Guide</a>
+    <a href="#" onclick="openLegal('photo-guide')">Photo Guide</a>
     <a href="#" onclick="openLegal('dmca')">DMCA</a>
   </div>
-  <div>MoggCheck uses AI face mapping for entertainment and educational purposes only. © 2025 MoggCheck</div>
+  <div>MoggCheck uses AI face mapping for entertainment and educational purposes only. © 2026 MoggCheck</div>
 </footer>
 
 <script>
@@ -533,7 +586,6 @@ function showSection(id){
   const el = document.getElementById(id)
   el.style.display = 'flex'
   el.classList.add('active')
-  document.getElementById('mainFooter').style.display = (id==='s4'||id==='s6') ? 'block' : 'none'
 }
 
 // ===================== GENDER =====================
@@ -1627,6 +1679,32 @@ const legalPages={
   privacy:`<p>MoggCheck does not collect, store, or transmit any personal data or images. All face analysis is performed entirely in your browser using JavaScript. We do not use cookies for tracking purposes.</p>`,
   terms:`<p>MoggCheck is provided for entertainment and educational purposes only. Results are not medical advice. By using this tool you agree that scores are algorithmic estimates and not definitive evaluations of attractiveness.</p>`,
   tier:`<ul style="list-style:none;display:flex;flex-direction:column;gap:.75rem"><li><strong style="color:#DC2626">True Adam/Eve</strong> — Top 0.1%. Genetically exceptional facial geometry.</li><li><strong style="color:#F59E0B">Chad/Stacy</strong> — Top 1%. Highly attractive, above social dominance threshold.</li><li><strong style="color:#8B5CF6">Chadlite/Stacylite</strong> — Top 5%. Notably above average attractiveness.</li><li><strong style="color:#6366F1">HTN/HTB</strong> — High Tier Normie/Basicette. Top 15%.</li><li><strong style="color:#10B981">MTN/MTB</strong> — Mid Tier Normie. Average to slightly above average.</li><li><strong style="color:#3B82F6">LTN/LTB</strong> — Low Tier Normie. Slightly below average.</li><li><strong style="color:#6B7280">Sub 5</strong> — Below average.</li><li><strong style="color:#4B5563">Sub 3</strong> — Significant below-average markers.</li></ul>`,
+  "photo-guide":`
+    <h3 style="margin-bottom:1rem;color:#A78BFA">📸 Photo Submission Guide</h3>
+    <p style="margin-bottom:1.5rem">Follow these rules to get the best possible results!</p>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1rem">
+      <div style="text-align:center">
+        <img src="examples-pics/perfect-submission.png" style="width:100%;border-radius:12px;border:1px solid #334155" />
+        <p style="color:#10B981;font-weight:700;margin-top:.5rem">✅ Perfect Submission</p>
+      </div>
+      <div style="text-align:center">
+        <img src="examples-pics/bad-angles.png" style="width:100%;border-radius:12px;border:1px solid #334155" />
+        <p style="color:#EF4444;font-weight:700;margin-top:.5rem">❌ Bad Angles</p>
+      </div>
+      <div style="text-align:center">
+        <img src="examples-pics/bad-blurry.png" style="width:100%;border-radius:12px;border:1px solid #334155" />
+        <p style="color:#EF4444;font-weight:700;margin-top:.5rem">❌ Blurry</p>
+      </div>
+      <div style="text-align:center">
+        <img src="examples-pics/bad-expression.png" style="width:100%;border-radius:12px;border:1px solid #334155" />
+        <p style="color:#EF4444;font-weight:700;margin-top:.5rem">❌ Bad Expression</p>
+      </div>
+      <div style="text-align:center">
+        <img src="examples-pics/bad-hats.png" style="width:100%;border-radius:12px;border:1px solid #334155" />
+        <p style="color:#EF4444;font-weight:700;margin-top:.5rem">❌ Hat/Hair Cover</p>
+      </div>
+    </div>
+  `,
   dmca:`<p>For DMCA or copyright concerns, contact: dmca@moggcheck.com</p>`
 }
 function openLegal(page){

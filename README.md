@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="https://img.icons8.com/fluency/96/artificial-intelligence.png" alt="MoggCheck Logo" width="80" />
+  <img src="h-icon/creative.png" alt="MoggCheck Logo" width="100" />
   <h1>MoggCheck AI <span style="font-size:0.7em; color:#a78bfa;">V3</span></h1>
   <p align="center">
     <b>Professional-Grade Biometric Facial Analysis & Looksmaxxing Tier System</b>
@@ -12,6 +12,14 @@
     <img src="https://img.shields.io/badge/License-MIT-green?style=for-the-badge" alt="License" />
     <img src="https://img.shields.io/badge/Tech-JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black" alt="Tech" />
     <img src="https://img.shields.io/badge/AI-MediaPipe-0078D4?style=for-the-badge&logo=google-cloud&logoColor=white" alt="AI" />
+  </p>
+  
+  <p align="center">
+    <a href="#-key-features"><img src="h-icon/target.png" height="24" alt="Target" /> Key Features</a>
+    &nbsp;&nbsp;•&nbsp;&nbsp;
+    <a href="#-local-setup"><img src="h-icon/flash.png" height="24" alt="Flash" /> Quick Start</a>
+    &nbsp;&nbsp;•&nbsp;&nbsp;
+    <a href="#-photo-guide"><img src="icons/camera.png" height="24" alt="Camera" /> Photo Guide</a>
   </p>
 </div>
 
@@ -45,6 +53,14 @@ All known critical and minor bugs have been resolved! Here's the complete list:
 ---
 
 ## 🚀 Key Features
+
+<p align="center">
+  <img src="icons/padlock.png" width="32" alt="Privacy" />
+  <img src="icons/camera.png" width="32" alt="Camera" />
+  <img src="icons/vs.png" width="32" alt="VS Mode" />
+  <img src="icons/folder.png" width="32" alt="Folder" />
+  <img src="icons/person.png" width="32" alt="Person" />
+</p>
 
 - **🛡️ 100% Client-Side Analysis**: Your photos never leave your device. All AI processing happens locally in your browser for total privacy.
 - **🧬 478-Point 3D Mapping**: Utilizes Google's MediaPipe Face Mesh for granular landmark detection.
@@ -88,6 +104,42 @@ The analysis is divided into four critical pillars:
 
 ---
 
+## 📸 Photo Submission Guide
+
+Follow these rules to get the **best possible results!**
+
+<div align="center">
+  <table style="width:100%; border-collapse:separate; border-spacing:1rem;">
+    <tr>
+      <td align="center">
+        <img src="examples-pics/perfect-submission.png" width="200" alt="Perfect Photo" />
+        <p style="color:#10b981; font-weight:700;">✅ Perfect Submission</p>
+      </td>
+      <td align="center">
+        <img src="examples-pics/bad-angles.png" width="200" alt="Bad Angles" />
+        <p style="color:#ef4444; font-weight:700;">❌ Bad Angles</p>
+      </td>
+      <td align="center">
+        <img src="examples-pics/bad-blurry.png" width="200" alt="Blurry" />
+        <p style="color:#ef4444; font-weight:700;">❌ Blurry</p>
+      </td>
+    </tr>
+    <tr>
+      <td align="center">
+        <img src="examples-pics/bad-expression.png" width="200" alt="Bad Expression" />
+        <p style="color:#ef4444; font-weight:700;">❌ Bad Expression</p>
+      </td>
+      <td align="center">
+        <img src="examples-pics/bad-hats.png" width="200" alt="Hat/Hair Cover" />
+        <p style="color:#ef4444; font-weight:700;">❌ Hat/Hair Cover</p>
+      </td>
+      <td></td>
+    </tr>
+  </table>
+</div>
+
+---
+
 ## ⚙️ Local Setup
 
 1.  **Navigate to the Project Folder**
@@ -119,4 +171,11 @@ Distributed under the MIT License. See `LICENSE` for more information.
 
 <div align="center">
   <p>Built for the Looksmaxxing Community with ❤️</p>
+  <p>
+    <a href="https://instagram.com"><img src="footer-icons/3721672-instagram_108066.ico" height="32" alt="Instagram" /></a>
+    &nbsp;&nbsp;
+    <a href="https://tiktok.com"><img src="footer-icons/tiktok_logo_icon_186896.ico" height="32" alt="TikTok" /></a>
+    &nbsp;&nbsp;
+    <a href="https://twitter.com"><img src="footer-icons/twitter_x_logo_icon_258917.ico" height="32" alt="X" /></a>
+  </p>
 </div>
