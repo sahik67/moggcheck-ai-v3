@@ -1,0 +1,1674 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MoggCheck — Free Looksmaxxing Tier Test | Sub3 HTN Chad True Adam</title>
+<meta name="description" content="Free face analysis tool. Find your looksmaxxing tier with AI facial geometry. Sub3, LTN, MTN, HTN, Chadlite, Chad, True Adam. No signup. 100% private.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/face_mesh.js" crossorigin="anonymous"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+--bg:#0A0A0F;--bg2:#13131A;--border:#1E1E2E;--border2:#252535;
+--primary:#7C3AED;--accent:#E11D48;--text:#F8FAFC;--sub:#94A3B8;
+--sub2:#64748B;--green:#10B981;--gold:#F59E0B;--red:#EF4444;
+--blue:#3B82F6;--pink:#EC4899;--yellow:#D4ED00;
+}
+html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Space Grotesk',sans-serif;overflow-x:hidden}
+.section{display:none;min-height:100vh}
+.section.active{display:flex}
+button{cursor:pointer;font-family:'Space Grotesk',sans-serif}
+input[type=file]{display:none}
+
+/* PARTICLES BG */
+#particles-canvas{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;opacity:.4}
+
+/* GRID BG */
+.grid-bg{position:fixed;top:0;left:0;width:100%;height:100%;background-image:linear-gradient(rgba(124,58,237,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(124,58,237,.05) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;z-index:0}
+
+/* ===== S1 GENDER ===== */
+#s1{flex-direction:column;align-items:center;justify-content:center;position:relative;padding:2rem 1rem}
+.logo-pill{background:rgba(124,58,237,.15);border:1px solid rgba(124,58,237,.4);padding:.4rem 1.2rem;border-radius:50px;font-size:.75rem;color:#A78BFA;letter-spacing:.1em;text-transform:uppercase;margin-bottom:2.5rem;position:relative;z-index:1}
+.s1-headline{font-size:clamp(2rem,6vw,4rem);font-weight:700;text-align:center;line-height:1.1;margin-bottom:.75rem;position:relative;z-index:1}
+.grad{background:linear-gradient(135deg,#7C3AED,#EC4899,#F59E0B);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.s1-sub{color:var(--sub);text-align:center;max-width:440px;line-height:1.6;margin-bottom:2.5rem;position:relative;z-index:1}
+.gender-row{display:flex;gap:1.5rem;margin-bottom:2rem;position:relative;z-index:1}
+.gender-card{background:var(--bg2);border:2px solid var(--border2);border-radius:16px;padding:2rem 2.5rem;display:flex;flex-direction:column;align-items:center;gap:.75rem;cursor:pointer;transition:all .25s;min-width:140px}
+.gender-card:hover{transform:scale(1.04);border-color:var(--primary)}
+.gender-card.selected{border-color:var(--yellow);box-shadow:0 0 20px rgba(212,237,0,.15)}
+.gender-icon{font-size:2.5rem}
+.gender-label{font-weight:600;font-size:1rem;letter-spacing:.05em}
+#startBtn{background:linear-gradient(135deg,#7C3AED,#6D28D9);border:none;color:#fff;padding:1rem 2.5rem;border-radius:12px;font-size:1rem;font-weight:600;letter-spacing:.05em;transition:all .25s;opacity:.5;pointer-events:none;position:relative;z-index:1}
+#startBtn.enabled{opacity:1;pointer-events:all}
+#startBtn.enabled:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(124,58,237,.4)}
+.trust-row{display:flex;flex-wrap:wrap;gap:.75rem;justify-content:center;margin-top:1.5rem;position:relative;z-index:1}
+.trust-badge{background:rgba(255,255,255,.04);border:1px solid var(--border);padding:.4rem .9rem;border-radius:50px;font-size:.75rem;color:var(--sub);display:flex;align-items:center;gap:.4rem}
+
+/* ===== S2 UPLOAD ===== */
+#s2{flex-direction:column;align-items:center;justify-content:center;padding:2rem 1rem;position:relative}
+.mode-toggle{display:flex;background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:.25rem;margin-bottom:2rem;position:relative;z-index:1}
+.mode-btn{padding:.5rem 1.5rem;border:none;background:none;color:var(--sub);font-size:.875rem;font-weight:600;border-radius:8px;transition:all .2s}
+.mode-btn.active{background:var(--primary);color:#fff}
+.upload-container{width:100%;max-width:700px;position:relative;z-index:1}
+.upload-zone{border:2px dashed var(--border2);border-radius:16px;padding:3rem 2rem;display:flex;flex-direction:column;align-items:center;gap:1rem;cursor:pointer;transition:all .3s;background:var(--bg2);animation:pulse-border 3s ease-in-out infinite}
+.upload-zone:hover{border-color:var(--primary);background:rgba(124,58,237,.05)}
+@keyframes pulse-border{0%,100%{border-color:var(--border2)}50%{border-color:rgba(124,58,237,.5)}}
+.upload-icon{font-size:3rem;opacity:.5}
+.upload-title{font-size:1.1rem;font-weight:600}
+.upload-sub{color:var(--sub);font-size:.85rem}
+.upload-btns{display:flex;gap:1rem;flex-wrap:wrap;justify-content:center}
+.btn-browse{background:var(--primary);border:none;color:#fff;padding:.65rem 1.5rem;border-radius:10px;font-weight:600;font-size:.875rem}
+.btn-camera{background:var(--bg);border:1px solid var(--border2);color:var(--text);padding:.65rem 1.5rem;border-radius:10px;font-weight:600;font-size:.875rem}
+.preview-box{display:none;position:relative;margin-top:1.5rem;border-radius:12px;overflow:hidden;border:2px solid var(--primary)}
+.preview-box img{width:100%;max-height:400px;object-fit:contain;display:block;background:#000}
+.preview-box canvas{position:absolute;top:0;left:0;width:100%;height:100%}
+#analyzeBtn,#vsAnalyzeBtn{display:none;background:linear-gradient(135deg,#E11D48,#BE123C);border:none;color:#fff;padding:1rem 2.5rem;border-radius:12px;font-size:1rem;font-weight:700;letter-spacing:.05em;margin-top:1.5rem;transition:all .25s}
+#analyzeBtn:hover,#vsAnalyzeBtn:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(225,29,72,.35)}
+.tips-row{display:flex;gap:1.5rem;margin-top:1.5rem;flex-wrap:wrap;justify-content:center;position:relative;z-index:1}
+.tip{color:var(--sub);font-size:.8rem;display:flex;align-items:center;gap:.4rem}
+.tip-check{color:var(--green)}
+.vs-row{display:none;gap:1.5rem;width:100%;max-width:700px}
+.vs-slot{flex:1;display:flex;flex-direction:column;gap:.75rem}
+.vs-label{font-weight:600;font-size:.9rem;color:var(--sub);text-align:center}
+.vs-upload-zone{border:2px dashed var(--border2);border-radius:12px;padding:2rem 1rem;display:flex;flex-direction:column;align-items:center;gap:.5rem;cursor:pointer;background:var(--bg2);transition:all .3s;min-height:160px}
+.vs-upload-zone:hover{border-color:var(--primary)}
+.vs-preview{display:none;width:100%;border-radius:10px;overflow:hidden;border:2px solid var(--primary)}
+.vs-preview img{width:100%;max-height:200px;object-fit:contain;background:#000}
+
+/* Camera modal */
+#cameraModal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:100;flex-direction:column;align-items:center;justify-content:center}
+#cameraModal.open{display:flex}
+.cam-container{position:relative;width:min(400px,90vw)}
+#camVideo{width:100%;border-radius:12px;transform:scaleX(-1)}
+#camOverlay{position:absolute;top:0;left:0;width:100%;height:100%;border-radius:12px}
+.cam-status{margin-top:.75rem;font-size:.85rem;font-weight:600;text-align:center;min-height:1.5em}
+.cam-actions{display:flex;gap:1rem;margin-top:1rem}
+#captureBtn{background:var(--accent);border:none;color:#fff;padding:.9rem 2rem;border-radius:50px;font-weight:700;font-size:1rem;position:relative;transition:all .25s}
+#captureBtn.ready{animation:pulse-cam .8s ease-in-out infinite}
+@keyframes pulse-cam{0%,100%{box-shadow:0 0 0 0 rgba(225,29,72,.5)}50%{box-shadow:0 0 0 12px rgba(225,29,72,0)}}
+.cam-close{background:var(--bg2);border:1px solid var(--border);color:var(--text);padding:.7rem 1.5rem;border-radius:50px;font-weight:600}
+
+/* ===== S3 SCANNING ===== */
+#s3{flex-direction:column;align-items:center;justify-content:center;padding:2rem 1rem;position:relative}
+.scan-photo-box{position:relative;width:min(360px,85vw);border-radius:16px;overflow:hidden;border:2px solid var(--primary);box-shadow:0 0 30px rgba(124,58,237,.3);margin-bottom:2rem}
+#scanPhoto{width:100%;display:block;background:#000}
+.scan-line{position:absolute;top:0;left:0;width:100%;height:3px;background:linear-gradient(90deg,transparent,rgba(124,58,237,.8),transparent);animation:scanAnim 2.5s linear infinite}
+@keyframes scanAnim{0%{top:0}100%{top:100%}}
+.scan-status{font-size:1.1rem;font-weight:600;margin-bottom:.75rem;text-align:center;min-height:1.8em;position:relative;z-index:1}
+.scan-pct{font-family:'Space Mono',monospace;font-size:2.5rem;font-weight:700;color:var(--primary);position:relative;z-index:1}
+.scan-bar-wrap{width:min(360px,85vw);background:var(--bg2);border-radius:50px;height:6px;overflow:hidden;margin-top:1rem;position:relative;z-index:1}
+.scan-bar{height:100%;background:linear-gradient(90deg,var(--primary),var(--pink));width:0%;transition:width .3s;border-radius:50px}
+
+/* ===== S4 RESULTS ===== */
+#s4{flex-direction:column;align-items:center;padding:2rem 1rem 4rem;position:relative;overflow-y:auto}
+.results-header{text-align:center;margin-bottom:2rem;position:relative;z-index:1;width:100%}
+.results-header h2{font-size:1.5rem;font-weight:700;color:var(--sub);text-transform:uppercase;letter-spacing:.15em}
+.results-main{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;width:100%;max-width:900px;margin-bottom:2rem;position:relative;z-index:1}
+@media(max-width:640px){.results-main{grid-template-columns:1fr}}
+.result-photo-card{background:var(--bg2);border:1px solid var(--border);border-radius:16px;overflow:hidden;position:relative}
+#resultCanvas{width:100%;display:block}
+.score-card{background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:1.5rem;display:flex;flex-direction:column;align-items:center;gap:1rem}
+.score-ring-wrap{position:relative;width:200px;height:200px}
+#scoreRingSvg{width:200px;height:200px;transform:rotate(-90deg)}
+.score-ring-text{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.score-num{font-family:'Space Mono',monospace;font-size:2.5rem;font-weight:700}
+.score-denom{color:var(--sub);font-size:.8rem}
+.tier-badge{padding:.5rem 1.5rem;border-radius:50px;font-weight:700;font-size:1rem;letter-spacing:.1em;text-transform:uppercase;margin-top:.25rem}
+.face-shape-tag{background:rgba(124,58,237,.15);border:1px solid rgba(124,58,237,.3);color:#A78BFA;padding:.3rem .9rem;border-radius:50px;font-size:.8rem;font-weight:600}
+.highlight-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem;width:100%;max-width:900px;margin-bottom:2rem;position:relative;z-index:1}
+.highlight-card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:1.25rem;display:flex;flex-direction:column;gap:.4rem}
+.highlight-label{font-size:.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--sub)}
+.highlight-name{font-size:1rem;font-weight:700}
+.highlight-score{font-family:'Space Mono',monospace;font-size:1.25rem;font-weight:700}
+.pillars{width:100%;max-width:900px;display:flex;flex-direction:column;gap:1.5rem;position:relative;z-index:1}
+.pillar{background:var(--bg2);border:1px solid var(--border);border-radius:16px;overflow:hidden}
+.pillar-header{padding:1.25rem 1.5rem;display:flex;align-items:center;gap:.75rem;cursor:pointer;user-select:none}
+.pillar-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.pillar-title{font-weight:700;font-size:1rem;flex:1}
+.pillar-avg{font-family:'Space Mono',monospace;font-size:1rem;font-weight:700}
+.pillar-chevron{color:var(--sub);transition:transform .25s;font-size:.75rem}
+.pillar-body{padding:0 1.5rem 1.25rem;display:flex;flex-direction:column;gap:.75rem}
+.metric-row{display:flex;flex-direction:column;gap:.35rem}
+.metric-top{display:flex;align-items:center;justify-content:space-between}
+.metric-name{font-size:.875rem;font-weight:600;display:flex;align-items:center;gap:.5rem}
+.metric-tag{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);padding:.1rem .5rem;border-radius:6px;font-size:.7rem;color:var(--sub);font-family:'Space Mono',monospace}
+.metric-right{display:flex;align-items:center;gap:.75rem}
+.metric-score{font-family:'Space Mono',monospace;font-size:.9rem;font-weight:700}
+.sigma-tag{font-size:.65rem;font-weight:700;padding:.1rem .4rem;border-radius:4px;background:rgba(255,255,255,.06);color:var(--sub2)}
+.metric-bar-bg{height:4px;background:rgba(255,255,255,.06);border-radius:4px;overflow:hidden}
+.metric-bar{height:100%;border-radius:4px;width:0%;transition:width 1s}
+.metric-desc{font-size:.72rem;color:var(--sub2)}
+.sub-metrics{padding-left:1rem;display:flex;flex-direction:column;gap:.5rem;margin-top:.25rem;border-left:2px solid rgba(255,255,255,.06)}
+.radar-section{width:100%;max-width:900px;background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:1.5rem;margin-top:0;position:relative;z-index:1}
+.section-title{font-size:1rem;font-weight:700;margin-bottom:1rem;color:var(--sub);text-transform:uppercase;letter-spacing:.1em}
+.biometric{width:100%;max-width:900px;background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:1.5rem;margin-top:1.5rem;position:relative;z-index:1}
+.bio-label{font-size:.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--sub);margin-bottom:.5rem}
+.bio-summary{line-height:1.7;color:var(--sub);font-size:.875rem}
+.bio-list{margin-top.75rem;display:flex;flex-direction:column;gap:.35rem}
+.bio-item{display:flex;align-items:flex-start;gap:.5rem;font-size:.8rem;color:var(--sub)}
+.bio-dot{width:5px;height:5px;border-radius:50%;background:var(--primary);flex-shrink:0;margin-top:.45rem}
+.confidence-bar{margin-top:1rem;display:flex;align-items:center;gap:.75rem}
+.conf-label{font-size:.75rem;color:var(--sub);min-width:80px}
+.conf-bar-bg{flex:1;height:6px;background:rgba(255,255,255,.06);border-radius:4px;overflow:hidden}
+.conf-bar-fill{height:100%;background:linear-gradient(90deg,var(--primary),var(--green));border-radius:4px}
+.conf-pct{font-family:'Space Mono',monospace;font-size:.8rem;font-weight:700;color:var(--green);min-width:40px;text-align:right}
+.tier-table{width:100%;max-width:900px;background:var(--bg2);border:1px solid var(--border);border-radius:16px;overflow:hidden;margin-top:1.5rem;position:relative;z-index:1}
+.tier-row{display:flex;align-items:center;gap:1rem;padding:.75rem 1.5rem;border-bottom:1px solid var(--border)}
+.tier-row:last-child{border-bottom:none}
+.tier-row.current{background:rgba(124,58,237,.1)}
+.tier-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.tier-name-cell{flex:1;font-weight:600;font-size:.875rem}
+.tier-range{font-family:'Space Mono',monospace;font-size:.75rem;color:var(--sub);min-width:80px}
+.tier-pct{font-size:.75rem;color:var(--sub2);min-width:60px;text-align:right}
+.share-section{width:100%;max-width:900px;background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:1.5rem;margin-top:1.5rem;position:relative;z-index:1}
+.tips-section{width:100%;max-width:900px;background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:1.5rem;margin-top:1.5rem;position:relative;z-index:1}
+.action-row{display:flex;gap:1rem;flex-wrap:wrap;justify-content:center;margin-top:1.5rem;position:relative;z-index:1}
+.btn-retake{background:var(--bg2);border:1px solid var(--border);color:var(--text);padding:.75rem 1.5rem;border-radius:10px;font-weight:600;font-size:.875rem;transition:all .2s}
+.btn-retake:hover{border-color:var(--primary)}
+.btn-share{background:linear-gradient(135deg,var(--primary),var(--pink));border:none;color:#fff;padding:.75rem 1.5rem;border-radius:10px;font-weight:600;font-size:.875rem;transition:all .2s}
+.btn-share:hover{opacity:.9}
+#shareCanvas{display:none}
+
+/* ===== S5 ERROR ===== */
+#s5{flex-direction:column;align-items:center;justify-content:center;padding:2rem;text-align:center;position:relative}
+.error-icon{font-size:4rem;margin-bottom:1rem}
+.error-title{font-size:1.5rem;font-weight:700;margin-bottom:.5rem}
+.error-msg{color:var(--sub);margin-bottom:2rem;max-width:400px;line-height:1.6}
+.btn-retry{background:var(--primary);border:none;color:#fff;padding:.8rem 2rem;border-radius:10px;font-weight:600}
+
+/* ===== S6 VS ===== */
+#s6{flex-direction:column;align-items:center;padding:2rem 1rem 4rem;position:relative;overflow-y:auto}
+.vs-winner-banner{width:100%;max-width:700px;background:linear-gradient(135deg,rgba(245,158,11,.15),rgba(245,158,11,.05));border:1px solid rgba(245,158,11,.3);border-radius:16px;padding:1.5rem;text-align:center;margin-bottom:1.5rem;position:relative;z-index:1}
+.vs-trophy{font-size:2.5rem}
+.vs-winner-label{font-size:.75rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);margin-top:.5rem}
+.vs-winner-name{font-size:1.25rem;font-weight:700;margin-top:.25rem}
+.vs-canvases{display:grid;grid-template-columns:1fr 1fr;gap:1rem;width:100%;max-width:700px;margin-bottom:1.5rem;position:relative;z-index:1}
+.vs-canvas-card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;overflow:hidden;display:flex;flex-direction:column}
+.vs-canvas-label{padding:.6rem;text-align:center;font-size:.8rem;font-weight:700;color:var(--sub);text-transform:uppercase;letter-spacing:.08em}
+.vs-score-display{padding:.75rem;text-align:center;font-family:'Space Mono',monospace;font-size:1.5rem;font-weight:700}
+.vs-compare-table{width:100%;max-width:700px;background:var(--bg2);border:1px solid var(--border);border-radius:16px;overflow:hidden;margin-bottom:1.5rem;position:relative;z-index:1}
+.vs-trow{display:grid;grid-template-columns:1fr 80px 1fr;align-items:center;padding:.7rem 1rem;border-bottom:1px solid var(--border);font-size:.82rem}
+.vs-trow:last-child{border-bottom:none}
+.vs-trow.header{background:rgba(255,255,255,.03);font-weight:700;color:var(--sub);font-size:.7rem;text-transform:uppercase;letter-spacing:.08em}
+.vs-cell-l{text-align:right;font-family:'Space Mono',monospace}
+.vs-cell-r{text-align:left;font-family:'Space Mono',monospace}
+.vs-cell-mid{text-align:center;color:var(--sub2);font-size:.75rem}
+.vs-radar-section{width:100%;max-width:700px;background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:1.5rem;position:relative;z-index:1}
+.btn-newvs{background:var(--primary);border:none;color:#fff;padding:.75rem 1.5rem;border-radius:10px;font-weight:600;margin-top:1.5rem;position:relative;z-index:1}
+
+/* ANIMATION OVERLAYS */
+#animOverlay{display:none;position:fixed;inset:0;z-index:200;pointer-events:none;flex-direction:column;align-items:center;justify-content:center}
+#animOverlay.active{display:flex}
+.anim-text{font-size:clamp(2rem,8vw,5rem);font-weight:900;letter-spacing:.05em;text-align:center;opacity:0;text-shadow:0 0 40px currentColor}
+#particleCanvas{position:fixed;inset:0;pointer-events:none;z-index:199}
+
+/* MODAL */
+.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:300;align-items:center;justify-content:center;padding:1rem}
+.modal.open{display:flex}
+.modal-box{background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:2rem;max-width:600px;width:100%;max-height:80vh;overflow-y:auto;position:relative}
+.modal-close{position:absolute;top:1rem;right:1rem;background:none;border:none;color:var(--sub);font-size:1.25rem;cursor:pointer}
+.modal-title{font-size:1.25rem;font-weight:700;margin-bottom:1rem}
+.modal-content{color:var(--sub);line-height:1.7;font-size:.875rem}
+
+/* FOOTER */
+footer{background:var(--bg2);border-top:1px solid var(--border);padding:1.5rem;text-align:center;font-size:.75rem;color:var(--sub2);position:relative;z-index:1}
+footer a{color:var(--sub);text-decoration:none;transition:color .2s}
+footer a:hover{color:var(--text)}
+.footer-links{display:flex;flex-wrap:wrap;gap:1rem;justify-content:center;margin-bottom:.75rem}
+.footer-social{display:flex;gap:.75rem;justify-content:center;margin-bottom:.75rem}
+.social-icon{width:32px;height:32px;background:var(--bg);border:1px solid var(--border);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:.75rem;text-decoration:none;color:var(--sub);transition:all .2s}
+.social-icon:hover{border-color:var(--primary);color:var(--text)}
+.crack-overlay{position:fixed;inset:0;pointer-events:none;z-index:198;opacity:0;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 400'%3E%3Cpath d='M200 0 L180 80 L160 85 L140 160 L160 170 L120 250 L150 255 L100 400' stroke='rgba(239,68,68,0.6)' stroke-width='2' fill='none'/%3E%3Cpath d='M200 0 L220 75 L240 80 L260 155 L240 165 L280 245 L250 250 L300 400' stroke='rgba(239,68,68,0.4)' stroke-width='1.5' fill='none'/%3E%3C/svg%3E") center/cover}
+</style>
+</head>
+<body>
+
+<canvas id="particles-canvas"></canvas>
+<div class="grid-bg"></div>
+<div class="crack-overlay" id="crackOverlay"></div>
+
+<!-- SECTION 1: GENDER -->
+<section id="s1" class="section active">
+  <div class="logo-pill">MoggCheck AI · Face Analysis</div>
+  <h1 class="s1-headline">Discover Your True<br><span class="grad">Looksmaxxing Tier</span></h1>
+  <p class="s1-sub">AI facial mapping. Bone structure. Ratios. Real Results. No guessing.</p>
+  <div class="gender-row">
+    <div class="gender-card" id="maleCard" onclick="selectGender('male')">
+      <div class="gender-icon">♂</div>
+      <div class="gender-label">Male</div>
+    </div>
+    <div class="gender-card" id="femaleCard" onclick="selectGender('female')">
+      <div class="gender-icon">♀</div>
+      <div class="gender-label">Female</div>
+    </div>
+  </div>
+  <button id="startBtn" onclick="goToUpload()">Start Analysis →</button>
+  <div class="trust-row">
+    <div class="trust-badge">🔒 No Server Upload</div>
+    <div class="trust-badge">📱 Works on Any Device</div>
+    <div class="trust-badge">🎯 AI Facial Mapping</div>
+    <div class="trust-badge">⚡ Instant Results</div>
+  </div>
+</section>
+
+<!-- SECTION 2: UPLOAD -->
+<section id="s2" class="section" style="flex-direction:column;align-items:center;justify-content:center">
+  <div class="mode-toggle">
+    <button class="mode-btn active" onclick="setMode('solo')">Solo</button>
+    <button class="mode-btn" onclick="setMode('vs')">VS Mode</button>
+  </div>
+
+  <!-- Solo Upload -->
+  <div class="upload-container" id="soloUploadArea">
+    <div class="upload-zone" id="dropZone" onclick="document.getElementById('fileInput').click()" ondragover="event.preventDefault()" ondrop="handleDrop(event)">
+      <div class="upload-icon">📷</div>
+      <div class="upload-title">Drop your photo here</div>
+      <div class="upload-sub">or choose an option below</div>
+      <div class="upload-btns">
+        <button class="btn-browse" onclick="event.stopPropagation();document.getElementById('fileInput').click()">Browse Files</button>
+        <button class="btn-camera" onclick="event.stopPropagation();openCamera()">📸 Camera</button>
+      </div>
+    </div>
+    <input type="file" id="fileInput" accept="image/*" onchange="handleFile(this.files[0])">
+    <div class="preview-box" id="previewBox">
+      <img id="previewImg" src="" alt="Preview">
+      <canvas id="detectionCanvas"></canvas>
+    </div>
+    <button id="analyzeBtn" onclick="startAnalysis()">Analyze My Face →</button>
+  </div>
+
+  <!-- VS Upload -->
+  <div class="vs-row" id="vsUploadArea">
+    <div class="vs-slot">
+      <div class="vs-label">👤 Person 1</div>
+      <!-- Gender Selector -->
+      <div style="display:flex;gap:.5rem;margin-bottom:.75rem;justify-content:center">
+        <button id="vsGender1Male" onclick="selectVSGender(1,'male')" style="padding:.4rem 1rem;border-radius:8px;border:1px solid var(--border);background:var(--bg2);font-family:var(--font);font-weight:600;cursor:pointer;transition:.2s">♂ Male</button>
+        <button id="vsGender1Female" onclick="selectVSGender(1,'female')" style="padding:.4rem 1rem;border-radius:8px;border:1px solid var(--border);background:var(--bg2);font-family:var(--font);font-weight:600;cursor:pointer;transition:.2s">♀ Female</button>
+      </div>
+      <div class="vs-upload-zone" onclick="document.getElementById('vsFile1').click()">
+        <div style="font-size:2rem">📷</div>
+        <div style="font-size:.85rem;color:var(--sub)">Upload Photo</div>
+      </div>
+      <input type="file" id="vsFile1" accept="image/*" onchange="handleVS(this,1)">
+      <div class="vs-preview" id="vsPrev1"><img id="vsImg1" src="" alt=""></div>
+    </div>
+    <div class="vs-slot">
+      <div class="vs-label">👤 Person 2</div>
+      <!-- Gender Selector -->
+      <div style="display:flex;gap:.5rem;margin-bottom:.75rem;justify-content:center">
+        <button id="vsGender2Male" onclick="selectVSGender(2,'male')" style="padding:.4rem 1rem;border-radius:8px;border:1px solid var(--border);background:var(--bg2);font-family:var(--font);font-weight:600;cursor:pointer;transition:.2s">♂ Male</button>
+        <button id="vsGender2Female" onclick="selectVSGender(2,'female')" style="padding:.4rem 1rem;border-radius:8px;border:1px solid var(--border);background:var(--bg2);font-family:var(--font);font-weight:600;cursor:pointer;transition:.2s">♀ Female</button>
+      </div>
+      <div class="vs-upload-zone" onclick="document.getElementById('vsFile2').click()">
+        <div style="font-size:2rem">📷</div>
+        <div style="font-size:.85rem;color:var(--sub)">Upload Photo</div>
+      </div>
+      <input type="file" id="vsFile2" accept="image/*" onchange="handleVS(this,2)">
+      <div class="vs-preview" id="vsPrev2"><img id="vsImg2" src="" alt=""></div>
+    </div>
+  </div>
+  <button id="vsAnalyzeBtn" onclick="startVSAnalysis()">Start VS Analysis →</button>
+
+  <div class="tips-row">
+    <div class="tip"><span class="tip-check">✓</span> Front-facing photo</div>
+    <div class="tip"><span class="tip-check">✓</span> Good lighting</div>
+    <div class="tip"><span class="tip-check">✓</span> No glasses if possible</div>
+  </div>
+</section>
+
+<!-- SECTION 3: SCANNING -->
+<section id="s3" class="section" style="flex-direction:column;align-items:center;justify-content:center">
+  <div class="scan-photo-box">
+    <img id="scanPhoto" src="" alt="">
+    <div class="scan-line"></div>
+  </div>
+  <div class="scan-status" id="scanStatus">Initializing AI…</div>
+  <div class="scan-pct" id="scanPct">0%</div>
+  <div class="scan-bar-wrap"><div class="scan-bar" id="scanBar"></div></div>
+</section>
+
+<!-- SECTION 4: RESULTS -->
+<section id="s4" class="section" style="flex-direction:column;align-items:center;overflow-y:auto">
+  <div class="results-header">
+    <h2>Analysis Complete</h2>
+  </div>
+  <div class="results-main">
+    <div class="result-photo-card">
+      <canvas id="resultCanvas"></canvas>
+    </div>
+    <div class="score-card">
+      <div class="score-ring-wrap">
+        <svg id="scoreRingSvg" viewBox="0 0 200 200">
+          <circle cx="100" cy="100" r="88" fill="none" stroke="rgba(255,255,255,.06)" stroke-width="12"/>
+          <circle id="ringFill" cx="100" cy="100" r="88" fill="none" stroke="#7C3AED" stroke-width="12"
+            stroke-linecap="round" stroke-dasharray="552.9" stroke-dashoffset="552.9"/>
+        </svg>
+        <div class="score-ring-text">
+          <div class="score-num" id="scoreNum">0.0</div>
+          <div class="score-denom">/10</div>
+        </div>
+      </div>
+      <div class="tier-badge" id="tierBadge">—</div>
+      <div class="face-shape-tag" id="faceShapeTag">—</div>
+      <div style="font-size:.75rem;color:var(--sub2);text-align:center;font-family:'Space Mono',monospace" id="headPoseTag"></div>
+    </div>
+  </div>
+
+  <div class="highlight-row">
+    <div class="highlight-card" style="border-left:3px solid var(--green)">
+      <div class="highlight-label">💪 Strongest Feature</div>
+      <div class="highlight-name" id="strongName">—</div>
+      <div class="highlight-score" id="strongScore" style="color:var(--green)">—</div>
+    </div>
+    <div class="highlight-card" style="border-left:3px solid var(--red)">
+      <div class="highlight-label">⚠️ Weakest Feature</div>
+      <div class="highlight-name" id="weakName">—</div>
+      <div class="highlight-score" id="weakScore" style="color:var(--red)">—</div>
+    </div>
+  </div>
+
+  <div class="pillars" id="pillarsContainer"></div>
+
+  <div class="radar-section" style="margin-top:1.5rem">
+    <div class="section-title">📡 Facial Radar</div>
+    <canvas id="radarChart" height="300"></canvas>
+  </div>
+
+  <div class="biometric" id="biometricSection"></div>
+  <div class="tips-section" id="tipsSection"></div>
+
+  <div class="tier-table" id="tierTable"></div>
+
+  <div class="share-section">
+    <div class="section-title">📤 Share Your Result</div>
+    <canvas id="shareCanvas" style="display:none"></canvas>
+    <div style="display:flex;gap:1rem;flex-wrap:wrap;justify-content:center;margin-top:.75rem">
+      <button class="btn-share" onclick="generateShareCard()">Generate Share Card</button>
+      <button id="downloadBtn" class="btn-share" style="display:none" onclick="downloadShare()">⬇ Download PNG</button>
+    </div>
+    <div id="sharePreview" style="margin-top:1rem;display:none"><img id="shareImg" style="width:100%;max-width:400px;border-radius:12px;display:block;margin:0 auto" src="" alt=""></div>
+  </div>
+
+  <div class="action-row">
+    <button class="btn-retake" onclick="retake()">↩ Retake</button>
+    <button class="btn-share" onclick="setMode('vs');goToUpload()">⚔ VS Mode</button>
+  </div>
+</section>
+
+<!-- SECTION 5: ERROR -->
+<section id="s5" class="section" style="flex-direction:column;align-items:center;justify-content:center">
+  <div class="error-icon">⚠️</div>
+  <div class="error-title">Detection Failed</div>
+  <div class="error-msg" id="errorMsg">Could not detect a face. Please try a clearer photo.</div>
+  <button class="btn-retry" onclick="retake()">Try Again</button>
+</section>
+
+<!-- SECTION 6: VS RESULTS -->
+<section id="s6" class="section" style="flex-direction:column;align-items:center;overflow-y:auto">
+  <div class="vs-winner-banner" id="vsWinnerBanner">
+    <div class="vs-trophy">🏆</div>
+    <div class="vs-winner-label">Winner</div>
+    <div class="vs-winner-name" id="vsWinnerName">—</div>
+  </div>
+  <div class="vs-canvases">
+    <div class="vs-canvas-card">
+      <div class="vs-canvas-label">Person 1</div>
+      <canvas id="vsResCanvas1"></canvas>
+      <div class="vs-score-display" id="vsScore1Display">—</div>
+    </div>
+    <div class="vs-canvas-card">
+      <div class="vs-canvas-label">Person 2</div>
+      <canvas id="vsResCanvas2"></canvas>
+      <div class="vs-score-display" id="vsScore2Display">—</div>
+    </div>
+  </div>
+  <div class="vs-compare-table" id="vsCompareTable"></div>
+  <div class="vs-radar-section">
+    <div class="section-title">📡 VS Radar</div>
+    <canvas id="vsRadarChart" height="300"></canvas>
+  </div>
+  <button class="btn-newvs" onclick="retake()">↩ New Analysis</button>
+</section>
+
+<!-- Camera Modal -->
+<div id="cameraModal">
+  <div class="cam-container">
+    <video id="camVideo" autoplay playsinline muted></video>
+    <canvas id="camOverlay"></canvas>
+  </div>
+  <div class="cam-status" id="camStatus" style="color:var(--sub)">Initializing camera…</div>
+  <div class="cam-actions">
+    <button id="captureBtn" onclick="capturePhoto()" disabled>📸 Capture</button>
+    <button class="cam-close" onclick="closeCamera()">Cancel</button>
+  </div>
+</div>
+
+<!-- Anim Overlay -->
+<div id="animOverlay">
+  <div class="anim-text" id="animText"></div>
+</div>
+<canvas id="particleCanvas"></canvas>
+
+<!-- Legal Modal -->
+<div id="legalModal" class="modal">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeLegal()">✕</button>
+    <div class="modal-title" id="legalTitle"></div>
+    <div class="modal-content" id="legalContent"></div>
+  </div>
+</div>
+
+<footer id="mainFooter" style="display:none">
+  <div class="footer-social">
+    <a href="https://instagram.com/moggcheck" target="_blank" class="social-icon">📷</a>
+    <a href="https://tiktok.com/@moggcheck" target="_blank" class="social-icon">🎵</a>
+    <a href="https://twitter.com/moggcheck" target="_blank" class="social-icon">𝕏</a>
+  </div>
+  <div class="footer-links">
+    <a href="#" onclick="openLegal('about')">About</a>
+    <a href="#" onclick="openLegal('privacy')">Privacy</a>
+    <a href="#" onclick="openLegal('terms')">Terms</a>
+    <a href="#" onclick="openLegal('tier')">Tier Guide</a>
+    <a href="#" onclick="openLegal('dmca')">DMCA</a>
+  </div>
+  <div>MoggCheck uses AI face mapping for entertainment and educational purposes only. © 2025 MoggCheck</div>
+</footer>
+
+<script>
+// ===================== STATE =====================
+let selectedGender = null
+let vsGenders = {p1: null, p2: null}
+let currentMode = 'solo'
+let uploadedImage = null
+let vsImages = {p1: null, p2: null}
+let vsReady = {p1: false, p2: false}
+let analysisResult = null
+let vsResults = {p1: null, p2: null}
+let camStream = null
+let camFM = null
+let camFaceReady = false
+let camTarget = null // 'solo'|'vs1'|'vs2'
+let radarChartInst = null
+let vsRadarChartInst = null
+window.pxData = null
+window.vsData = {p1: null, p2: null}
+
+// ===================== PARTICLES =====================
+;(function(){
+  const c = document.getElementById('particles-canvas')
+  const ctx = c.getContext('2d')
+  let pts = []
+  function resize(){ c.width=innerWidth; c.height=innerHeight }
+  resize(); window.addEventListener('resize', resize)
+  for(let i=0;i<60;i++) pts.push({
+    x: Math.floor(Math.random()*innerWidth),
+    y: Math.floor(Math.random()*innerHeight),
+    vx: (Math.random()-.5)*.3, vy: (Math.random()-.5)*.3,
+    s: Math.random()*2+1, o: Math.random()*.4+.1
+  })
+  function frame(){
+    ctx.clearRect(0,0,c.width,c.height)
+    pts.forEach(p=>{
+      p.x+=p.vx; p.y+=p.vy
+      if(p.x<0)p.x=c.width; if(p.x>c.width)p.x=0
+      if(p.y<0)p.y=c.height; if(p.y>c.height)p.y=0
+      ctx.beginPath()
+      ctx.arc(p.x,p.y,p.s,0,Math.PI*2)
+      ctx.fillStyle=`rgba(124,58,237,${p.o})`
+      ctx.fill()
+    })
+    requestAnimationFrame(frame)
+  }
+  frame()
+})()
+
+// ===================== SECTION NAV =====================
+function showSection(id){
+  document.querySelectorAll('.section').forEach(s=>{ s.classList.remove('active'); s.style.display='none' })
+  const el = document.getElementById(id)
+  el.style.display = 'flex'
+  el.classList.add('active')
+  document.getElementById('mainFooter').style.display = (id==='s4'||id==='s6') ? 'block' : 'none'
+}
+
+// ===================== GENDER =====================
+function selectGender(g){
+  selectedGender = g
+  document.getElementById('maleCard').classList.toggle('selected', g==='male')
+  document.getElementById('femaleCard').classList.toggle('selected', g==='female')
+  document.getElementById('startBtn').classList.add('enabled')
+}
+
+function checkVSReady() {
+  const isReady = vsImages.p1 && vsImages.p2 && vsGenders.p1 && vsGenders.p2
+  document.getElementById('vsAnalyzeBtn').style.display = isReady ? 'block' : 'none'
+}
+
+function selectVSGender(num, g) {
+  vsGenders['p'+num] = g
+  const btnMale = document.getElementById('vsGender'+num+'Male')
+  const btnFemale = document.getElementById('vsGender'+num+'Female')
+  
+  // Reset both
+  btnMale.style.background = 'var(--bg2)'
+  btnMale.style.color = 'var(--text)'
+  btnMale.style.border = '1px solid var(--border)'
+  btnFemale.style.background = 'var(--bg2)'
+  btnFemale.style.color = 'var(--text)'
+  btnFemale.style.border = '1px solid var(--border)'
+  
+  // Activate selected
+  const activeBtn = g === 'male' ? btnMale : btnFemale
+  activeBtn.style.background = 'var(--primary)'
+  activeBtn.style.color = 'white'
+  activeBtn.style.border = '1px solid var(--primary)'
+  
+  checkVSReady()
+}
+
+function goToUpload(){ showSection('s2') }
+
+// ===================== MODE =====================
+function setMode(m){
+  currentMode = m
+  vsGenders = {p1: null, p2: null}
+  document.querySelectorAll('.mode-btn').forEach((b,i)=>b.classList.toggle('active', (i===0&&m==='solo')||(i===1&&m==='vs')))
+  document.getElementById('soloUploadArea').style.display = m==='solo'?'block':'none'
+  document.getElementById('vsUploadArea').style.display = m==='vs'?'flex':'none'
+  document.getElementById('analyzeBtn').style.display = 'none'
+  document.getElementById('vsAnalyzeBtn').style.display = 'none'
+  // Reset VS gender buttons
+  for (let num of [1,2]) {
+    const btnMale = document.getElementById('vsGender'+num+'Male')
+    const btnFemale = document.getElementById('vsGender'+num+'Female')
+    if (btnMale && btnFemale) {
+      btnMale.style.background = 'var(--bg2)'
+      btnMale.style.color = 'var(--text)'
+      btnMale.style.border = '1px solid var(--border)'
+      btnFemale.style.background = 'var(--bg2)'
+      btnFemale.style.color = 'var(--text)'
+      btnFemale.style.border = '1px solid var(--border)'
+    }
+  }
+}
+
+// ===================== FILE HANDLING =====================
+function handleFile(file){
+  if(!file) return
+  const url = URL.createObjectURL(file)
+  uploadedImage = url
+  const img = document.getElementById('previewImg')
+  img.src = url
+  img.onload = () => {
+    document.getElementById('previewBox').style.display = 'block'
+    document.getElementById('analyzeBtn').style.display = 'block'
+    document.getElementById('dropZone').style.display = 'none'
+  }
+}
+
+function handleDrop(e){
+  e.preventDefault()
+  const f = e.dataTransfer.files[0]
+  if(f && f.type.startsWith('image/')) handleFile(f)
+}
+
+function handleVS(input, num){
+  const file = input.files[0]; if(!file) return
+  const url = URL.createObjectURL(file)
+  vsImages['p'+num] = url
+  vsReady['p'+num] = true
+  const img = document.getElementById('vsImg'+num)
+  img.src = url
+  document.getElementById('vsPrev'+num).style.display = 'block'
+  checkVSReady()
+}
+
+// ===================== CAMERA =====================
+function openCamera(target='solo'){
+  camTarget = target
+  document.getElementById('cameraModal').classList.add('open')
+  startCam()
+}
+function closeCamera(){
+  if(camStream){ camStream.getTracks().forEach(t=>t.stop()); camStream=null }
+  if(camFM){ camFM.close(); camFM=null }
+  document.getElementById('cameraModal').classList.remove('open')
+}
+
+async function startCam(){
+  try{
+    camStream = await navigator.mediaDevices.getUserMedia({
+      video:{facingMode:'user', width:{ideal:1280}, height:{ideal:720}}, audio:false
+    })
+    const vid = document.getElementById('camVideo')
+    vid.srcObject = camStream
+    await new Promise(r=>vid.onloadedmetadata=r)
+    vid.play()
+    initCamFaceMesh()
+  }catch(e){
+    document.getElementById('camStatus').textContent = '⚠ Camera access denied'
+    document.getElementById('camStatus').style.color='var(--red)'
+  }
+}
+
+function initCamFaceMesh(){
+  camFM = new FaceMesh({locateFile: f=>`https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/${f}`})
+  camFM.setOptions({maxNumFaces:1,refineLandmarks:true,minDetectionConfidence:.5,minTrackingConfidence:.5})
+  camFM.onResults(camResults=>{
+    const vid = document.getElementById('camVideo')
+    const ov = document.getElementById('camOverlay')
+    ov.width = vid.videoWidth; ov.height = vid.videoHeight
+    const ctx = ov.getContext('2d')
+    ctx.clearRect(0,0,ov.width,ov.height)
+    const lms = camResults.multiFaceLandmarks?.[0]
+    if(lms && lms.length>=478){
+      // Draw purple dots
+      lms.forEach(p=>{
+        ctx.beginPath()
+        ctx.arc(p.x*ov.width, p.y*ov.height, 1.5, 0, Math.PI*2)
+        ctx.fillStyle='rgba(167,139,250,.7)'
+        ctx.fill()
+      })
+      // Canthal lines
+      const W=ov.width,H=ov.height
+      ctx.strokeStyle='rgba(234,179,8,.9)'; ctx.lineWidth=2
+      ctx.beginPath(); ctx.moveTo(lms[33].x*W,lms[33].y*H); ctx.lineTo(lms[133].x*W,lms[133].y*H); ctx.stroke()
+      ctx.beginPath(); ctx.moveTo(lms[263].x*W,lms[263].y*H); ctx.lineTo(lms[362].x*W,lms[362].y*H); ctx.stroke()
+      // Jaw
+      const jaw=[234,93,132,58,172,136,150,149,176,148,152,377,400,378,379,365,397,288,361,323,454]
+      ctx.strokeStyle='rgba(255,255,255,.7)'; ctx.lineWidth=2; ctx.beginPath()
+      jaw.forEach((idx,i)=>{ if(i===0) ctx.moveTo(lms[idx].x*W,lms[idx].y*H); else ctx.lineTo(lms[idx].x*W,lms[idx].y*H) })
+      ctx.stroke()
+      camFaceReady = true
+      const btn = document.getElementById('captureBtn')
+      btn.disabled = false; btn.classList.add('ready')
+      document.getElementById('camStatus').textContent = 'Face detected ✓'
+      document.getElementById('camStatus').style.color = 'var(--green)'
+    } else {
+      camFaceReady = false
+      document.getElementById('captureBtn').disabled = true
+      document.getElementById('captureBtn').classList.remove('ready')
+      document.getElementById('camStatus').textContent = '⚠ Position your face in frame'
+      document.getElementById('camStatus').style.color = 'var(--gold)'
+    }
+  })
+  const vid = document.getElementById('camVideo')
+  async function detect(){
+    if(!camStream) return
+    await camFM.send({image: vid})
+    requestAnimationFrame(detect)
+  }
+  detect()
+}
+
+function capturePhoto(){
+  const vid = document.getElementById('camVideo')
+  const c = document.createElement('canvas')
+  c.width=vid.videoWidth; c.height=vid.videoHeight
+  const ctx=c.getContext('2d')
+  ctx.translate(c.width,0); ctx.scale(-1,1)
+  ctx.drawImage(vid,0,0)
+  const url = c.toDataURL('image/jpeg',.95)
+  closeCamera()
+  if(camTarget==='solo'){
+    uploadedImage = url
+    const img = document.getElementById('previewImg')
+    img.src=url
+    img.onload=()=>{ document.getElementById('previewBox').style.display='block'; document.getElementById('analyzeBtn').style.display='block'; document.getElementById('dropZone').style.display='none' }
+  } else {
+    const num = camTarget==='vs1'?1:2
+    vsImages['p'+num]=url; vsReady['p'+num]=true
+    document.getElementById('vsImg'+num).src=url
+    document.getElementById('vsPrev'+num).style.display='block'
+    checkVSReady()
+  }
+}
+
+// ===================== FACE MESH =====================
+function loadFaceMesh(imgEl){
+  return new Promise((resolve,reject)=>{
+    const fm = new FaceMesh({locateFile: f=>`https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/${f}`})
+    fm.setOptions({maxNumFaces:1,refineLandmarks:true,minDetectionConfidence:.5,minTrackingConfidence:.5})
+    fm.onResults(r=>{ fm.close(); resolve(r) })
+    fm.send({image:imgEl}).catch(reject)
+  })
+}
+
+// ===================== CALCULATIONS =====================
+function dist(a,b){
+  return Math.sqrt(Math.pow(b.x-a.x,2)+Math.pow(b.y-a.y,2)+Math.pow((b.z||0)-(a.z||0),2))
+}
+function clamp(n){ return Math.max(0,Math.min(10,parseFloat(n.toFixed(1)))) }
+function angleDeg(a,b,c){
+  const v1={x:a.x-b.x,y:a.y-b.y,z:(a.z||0)-(b.z||0)}
+  const v2={x:c.x-b.x,y:c.y-b.y,z:(c.z||0)-(b.z||0)}
+  const dot=v1.x*v2.x+v1.y*v2.y+v1.z*v2.z
+  const mag=Math.sqrt((v1.x*v1.x+v1.y*v1.y+v1.z*v1.z)*(v2.x*v2.x+v2.y*v2.y+v2.z*v2.z))
+  if(mag===0) return 130
+  return Math.acos(Math.max(-1,Math.min(1,dot/mag)))*180/Math.PI
+}
+function sigmaLabel(s){
+  if(s>=9.5) return 'Σ3+'
+  if(s>=8.5) return 'Σ2+'
+  if(s>=7.5) return 'Σ1+'
+  if(s>=6.0) return 'Median'
+  if(s>=4.0) return 'Σ-1'
+  return 'Σ-2'
+}
+function getTier(score,gender){
+  const m=[[9.5,'True Adam','#DC2626'],[8.5,'Chad','#F59E0B'],[7.5,'Chadlite','#8B5CF6'],[7.0,'HTN','#6366F1'],[6.0,'MTN','#10B981'],[5.0,'LTN','#3B82F6'],[3.5,'Sub 5','#6B7280'],[0,'Sub 3','#4B5563']]
+  const f=[[9.5,'True Eve','#DC2626'],[8.5,'Stacy','#EC4899'],[7.5,'Stacylite','#8B5CF6'],[7.0,'HTB','#6366F1'],[6.0,'MTB','#10B981'],[5.0,'LTB','#3B82F6'],[3.5,'Sub 5','#6B7280'],[0,'Sub 3','#4B5563']]
+  const tiers = gender==='male'?m:f
+  for(const[min,name,color] of tiers){ if(score>=min) return{name,color} }
+  return{name:'Sub 3',color:'#4B5563'}
+}
+
+function getSkinScore(imgEl, px){
+  try{
+    const c=document.createElement('canvas')
+    const ctx=c.getContext('2d')
+    const W=imgEl.naturalWidth,H=imgEl.naturalHeight
+    c.width=W;c.height=H
+    ctx.drawImage(imgEl,0,0)
+    function gv(cx,cy,s){
+      const sx=Math.max(0,Math.round(cx-s/2)),sy=Math.max(0,Math.round(cy-s/2))
+      const sw=Math.min(s,W-sx),sh=Math.min(s,H-sy)
+      if(sw<=0||sh<=0) return 50
+      const d=ctx.getImageData(sx,sy,sw,sh).data
+      const rs=[],gs=[],bs=[]
+      for(let i=0;i<d.length;i+=4){rs.push(d[i]);gs.push(d[i+1]);bs.push(d[i+2])}
+      const v=a=>{const m=a.reduce((x,y)=>x+y,0)/a.length;return a.reduce((x,y)=>x+Math.pow(y-m,2),0)/a.length}
+      return(v(rs)+v(gs)+v(bs))/3
+    }
+    const avg=(gv(px[116].x,px[116].y,22)+gv(px[345].x,px[345].y,22)+gv(px[10].x,px[10].y,18))/3
+    if(avg<10) return clamp(4.5+avg/4)
+    if(avg>1500) return clamp(10-avg/200)
+    return clamp(9.2-avg/800)
+  }catch(e){ return 5.0 }
+}
+
+function computeAll(lms, imgEl, gender){
+  const W=imgEl.naturalWidth, H=imgEl.naturalHeight
+  const px=lms.map(p=>({x:p.x*W,y:p.y*H,z:(p.z||0)*W}))
+
+  // Validation
+  const foreH=dist(px[10],px[9]),totalH=dist(px[10],px[152]),faceW=dist(px[234],px[454])
+  const mouthOpen=dist(px[13],px[14]),leftSide=dist(px[234],px[1]),rightSide=dist(px[454],px[1])
+  const sideRatio=Math.min(leftSide,rightSide)/Math.max(leftSide,rightSide)
+  if(foreH/totalH<0.05) throw new Error('Forehead covered. Remove hat or hair.')
+  if(sideRatio<0.40) throw new Error('Face camera directly.')
+  if(mouthOpen/totalH>0.12) throw new Error('Neutral expression required.')
+  if(faceW<W*0.12) throw new Error('Move closer to camera.')
+
+  const fH=dist(px[10],px[152]),fW=faceW
+  const bizygW=fW, bigonW=dist(px[172],px[397])
+
+  // Head pose
+  const pitch=Math.atan2(px[1].z-(px[10].z+px[152].z)/2,fH)*180/Math.PI
+  const yaw=Math.atan2(px[1].x-(px[234].x+px[454].x)/2,fW)*180/Math.PI
+  const roll=Math.atan2(px[454].y-px[234].y,px[454].x-px[234].x)*180/Math.PI
+
+  // 1 Golden Ratio
+  const gr=fH/fW
+  const goldenScore=clamp(10-Math.abs(gr-1.618)*10)
+
+  // 2 Symmetry
+  const symPairs=[[33,263,1.4],[133,362,1.3],[61,291,1.2],[234,454,1.4],[172,397,1.2],[0,17,0.8]]
+  let sErrSum=0,sWSum=0
+  symPairs.forEach(([l,r,w])=>{
+    const lD=Math.abs(px[l].x-px[1].x),rD=Math.abs(px[r].x-px[1].x)
+    sErrSum+=Math.sqrt(Math.pow(Math.abs(lD-rD)/fW,2)+Math.pow(Math.abs(px[l].y-px[r].y)/fH,2))*w
+    sWSum+=w
+  })
+  const symRMS=sErrSum/sWSum
+  const symmetryScore=clamp(10-symRMS*55)
+
+  // 3 Canthal tilt
+  const lTilt=Math.atan2(px[133].y-px[33].y,px[133].x-px[33].x)*180/Math.PI
+  const rTilt=Math.atan2(px[362].y-px[263].y,px[362].x-px[263].x)*180/Math.PI
+  let avgTilt=(lTilt+rTilt)/2
+  if(pitch<-5) avgTilt+=Math.abs(pitch)*0.1
+  let canthalScore,canthalLabel
+  if(avgTilt<=-4&&avgTilt>=-8){canthalScore=10.0;canthalLabel='Hunter Eyes +'}
+  else if(avgTilt<-8){canthalScore=clamp(10-Math.abs(avgTilt+8)*0.4);canthalLabel='Hunter Eyes +'}
+  else if(avgTilt<0){canthalScore=clamp(7.0+Math.abs(avgTilt)*0.75);canthalLabel='Positive Tilt'}
+  else if(avgTilt<2){canthalScore=clamp(5.0+avgTilt*0.5);canthalLabel='Neutral'}
+  else{canthalScore=clamp(5.0-avgTilt*0.8);canthalLabel='Negative — Prey Eyes'}
+  canthalScore=clamp(canthalScore)
+
+  // 4 Brow & lid
+  const browGap=(px[159].y-px[66].y)/fH
+  const browHeightScore=clamp(10-Math.abs(browGap-0.05)*80)
+  const lidH=dist(px[159],px[145]),lidRef=dist(px[33],px[133])*0.35
+  const lidExp=lidH/Math.max(lidRef,1)
+  const lidScore=clamp(10-Math.abs(lidExp-0.35)*10)
+  const browRidge=Math.abs(px[66].z-px[159].z)/fW
+  const browRidgeScore=gender==='male'?clamp(6.0+browRidge*80):clamp(10-browRidge*50)
+  const browScore=clamp(browHeightScore*0.4+browRidgeScore*0.6)
+
+  // 5 Hunter composite
+  const hunterScore=clamp(canthalScore*0.45+browScore*0.30+lidScore*0.25)
+
+  // 6 Gonial
+  const gA=angleDeg(px[234],px[172],px[152])
+  const gonialScore=(gA>=112&&gA<=128)?10.0:clamp(10-Math.min(Math.abs(gA-112),Math.abs(gA-128))*0.3)
+
+  // 7 Mandibular
+  const mpa=Math.abs(Math.atan2(px[172].y-px[152].y,px[172].x-px[152].x)*180/Math.PI)
+  const mandScore=clamp(10-Math.abs(mpa-15)*0.35)
+
+  // 8 Chin projection
+  const lowerFaceDepth=Math.abs(px[152].z-px[1].z)/fW
+  const chinScore=clamp(5.0+lowerFaceDepth*80)
+
+  // 9 Jaw definition
+  const jawDefScore=clamp(gonialScore*0.45+mandScore*0.30+chinScore*0.25)
+
+  // 10 FWHR
+  const fwhrH=dist(px[66],px[13]),fwhr=bizygW/Math.max(fwhrH,1)
+  const fwhrScore=(fwhr>=1.75&&fwhr<=2.05)?10.0:clamp(10-Math.min(Math.abs(fwhr-1.75),Math.abs(fwhr-2.05))*15)
+  const fwhrLabel=fwhr>1.85?'Ideal':fwhr>1.7?'Good':'Low'
+
+  // 11 Midface
+  const eyeY=(px[33].y+px[263].y)/2
+  const mfR=(px[1].y-eyeY)/fH
+  const midfaceScore=(mfR>=0.29&&mfR<=0.33)?10.0:clamp(10-Math.min(Math.abs(mfR-0.29),Math.abs(mfR-0.33))*35)
+
+  // 12 Cheekbone
+  const cheekR=bizygW/bigonW
+  const cheekScore=(cheekR>=1.15&&cheekR<=1.35)?10.0:clamp(10-Math.abs(cheekR-1.25)*15)
+
+  // 13 Facial thirds
+  const t1=Math.abs(px[10].y-px[66].y),t2=Math.abs(px[66].y-px[1].y),t3=Math.abs(px[1].y-px[152].y)
+  const thirdsScore=clamp(10-(Math.abs(t1/fH-0.33)+Math.abs(t2/fH-0.33)+Math.abs(t3/fH-0.34))*25)
+
+  // 14 Fifths
+  const eyeWidth=(dist(px[33],px[133])+dist(px[362],px[263]))/2
+  const fifthsScore=clamp(10-Math.abs(eyeWidth/fW-0.20)*40)
+
+  // 15 Compactness
+  const fRatio=fH/fW
+  const compactnessScore=(fRatio>=1.3&&fRatio<=1.45)?10.0:clamp(10-Math.min(Math.abs(fRatio-1.3),Math.abs(fRatio-1.45))*12)
+
+  // 16 Eye shape
+  const lEH=dist(px[159],px[145]),lEW=dist(px[33],px[133])
+  const rEH=dist(px[386],px[374]),rEW=dist(px[263],px[362])
+  const eyeR=((lEH/lEW)+(rEH/rEW))/2
+  const eyeLabel=eyeR>0.38?'Almond':eyeR>0.28?'Average':'Hooded'
+  const eyeScore=clamp(eyeR*25)
+
+  // 17 Nose, mouth, lip
+  const noseW=dist(px[129],px[358])
+  const noseScore=clamp(10-Math.abs(noseW/(fW/5)-1)*10)
+  const mouthW=dist(px[61],px[291])
+  const mouthScore=clamp(10-Math.abs(mouthW/(noseW*1.618)-1)*8)
+  const uL=dist(px[0],px[13]),lL=dist(px[13],px[17])
+  const lipScore=clamp(10-Math.abs(uL/lL-0.618)*14)
+
+  // 18 Dimorphism
+  const philLen=dist(px[2],px[0])
+  const lowerThirdRatio=dist(px[17],px[152])/Math.max(philLen,1)
+  let dimorphScore
+  if(gender==='male'){
+    dimorphScore=(lowerThirdRatio>=1.8&&lowerThirdRatio<=2.4)?10.0:clamp(10-Math.min(Math.abs(lowerThirdRatio-1.8),Math.abs(lowerThirdRatio-2.4))*8)
+  }else{
+    dimorphScore=(lowerThirdRatio>=1.3&&lowerThirdRatio<=1.7)?10.0:clamp(10-Math.min(Math.abs(lowerThirdRatio-1.3),Math.abs(lowerThirdRatio-1.7))*8)
+  }
+
+  // 19 IPD
+  const ipd=dist(px[468],px[473])
+  const ipdR=ipd/fW
+  const ipdScore=(ipdR>=0.43&&ipdR<=0.49)?10.0:clamp(10-Math.abs(ipdR-0.46)*15)
+
+  // 20 Orbital vector
+  const orbDiff=(px[145].y-px[116].y)/fH
+  const orbScore=clamp(10-(orbDiff+0.02)*60)
+
+  // 21 Facial definition
+  const leanRatio=bizygW/bigonW
+  const faceFatScore=clamp(4.0+(leanRatio-1.0)*20)
+
+  // 22 Forward growth
+  const philtrumRatio=philLen/fH
+  const noseToLipRatio=noseW/Math.max(mouthW,1)
+  const zDepth=Math.abs(px[1].z-px[234].z)/fW
+  const forwardGrowthScore=clamp(10-Math.abs(philtrumRatio-0.18)*12-Math.abs(noseToLipRatio-0.6)*8+zDepth*5)
+
+  // 23 Skin
+  const skinScore=getSkinScore(imgEl,px)
+
+  // 24 Face shape
+  const faceRatio2=fH/fW
+  const foreW=dist(px[103],px[332]),foreToJaw=foreW/bigonW
+  let faceShape
+  if(faceRatio2>1.5) faceShape='Oblong'
+  else if(faceRatio2<1.15) faceShape='Round'
+  else if(foreToJaw>1.15) faceShape='Heart'
+  else if(foreToJaw<0.82&&faceRatio2>1.35) faceShape='Diamond'
+  else if(faceRatio2>1.3&&foreToJaw>0.85&&foreToJaw<0.95) faceShape='Square'
+  else faceShape='Oval'
+
+  // Final score
+  const rawMetrics=[hunterScore,jawDefScore,midfaceScore,fwhrScore,cheekScore,symmetryScore,goldenScore,orbScore,skinScore,thirdsScore,fifthsScore]
+  const weights=[0.22,0.18,0.10,0.10,0.08,0.08,0.07,0.06,0.02,0.04,0.05]
+  let rawScore=rawMetrics.reduce((acc,val,i)=>acc+val*weights[i],0)
+  let scoreCapped=false
+  let cappedScore = rawScore
+  if(rawScore>7.5){
+    cappedScore=7.5+(rawScore-7.5)*0.65
+    scoreCapped = true
+  }
+  const overallScore=clamp(cappedScore)
+  const tier=getTier(overallScore,gender)
+
+  // Calculate detection confidence based on head pose, symmetry, etc.
+  let poseConfidence = 100
+  poseConfidence -= Math.min(50, Math.abs(pitch) * 2 + Math.abs(yaw) * 2 + Math.abs(roll) * 1.5)
+  let symmetryConfidence = Math.max(0, 100 - symRMS * 200)
+  let faceSizeConfidence = Math.min(100, Math.max(0, (faceW / W - 0.12) * 400))
+  let detectionConfidence = Math.min(98, Math.max(30, (poseConfidence * 0.4 + symmetryConfidence * 0.4 + faceSizeConfidence * 0.2)))
+
+  console.group('MoggCheck Analysis')
+  console.log('avgTilt:',avgTilt.toFixed(2),canthalLabel)
+  console.log('hunterScore:',hunterScore)
+  console.log('jawDefScore:',jawDefScore)
+  console.log('gonialAngle:',gA.toFixed(1)+'°')
+  console.log('fwhr:',fwhr.toFixed(3))
+  console.log('midface:',mfR.toFixed(3))
+  console.log('cheekR:',cheekR.toFixed(3))
+  console.log('symRMS:',symRMS.toFixed(4))
+  console.log('skinScore:',skinScore)
+  console.log('rawScore:',rawScore.toFixed(2), scoreCapped ? '(CAPPED)' : '')
+  console.log('FINAL:',overallScore,'|',tier.name)
+  console.groupEnd()
+
+  return {
+    px,gender,fH,fW,gr,goldenScore,symmetryScore,symRMS,avgTilt,canthalScore,canthalLabel,
+    browScore,lidScore,hunterScore,gA,gonialScore,mandScore,chinScore,jawDefScore,
+    fwhr,fwhrScore,fwhrLabel,mfR,midfaceScore,cheekR,cheekScore,thirdsScore,fifthsScore,
+    compactnessScore,eyeR,eyeLabel,eyeScore,noseScore,mouthScore,lipScore,
+    dimorphScore,ipdScore,ipdR,orbScore,faceFatScore,forwardGrowthScore,skinScore,
+    faceShape,overallScore,tier,pitch,yaw,roll,
+    detectionConfidence,scoreCapped,rawScore
+  }
+}
+
+// ===================== OVERLAY DRAWING =====================
+function drawOverlay(r, canvasId, imgEl){
+  const oc=document.getElementById(canvasId)
+  const ctx=oc.getContext('2d')
+  const px=r.px
+  function go(){
+    oc.width=imgEl.naturalWidth; oc.height=imgEl.naturalHeight
+    ctx.drawImage(imgEl,0,0)
+    const W=oc.width,H=oc.height
+
+    function label(text,x,y,color){
+      ctx.save()
+      const fs=Math.max(11,W*0.016)
+      ctx.font='bold '+fs+'px Space Mono,monospace'
+      const tw=ctx.measureText(text).width
+      ctx.fillStyle='rgba(0,0,0,0.82)'; ctx.fillRect(x-4,y-14,tw+8,20)
+      ctx.fillStyle=color; ctx.fillText(text,x,y)
+      ctx.restore()
+    }
+    function line(ax,ay,bx,by,color,width,dash){
+      ctx.save(); ctx.beginPath(); ctx.strokeStyle=color; ctx.lineWidth=width||2
+      if(dash) ctx.setLineDash(dash); else ctx.setLineDash([])
+      ctx.moveTo(ax,ay); ctx.lineTo(bx,by); ctx.stroke(); ctx.setLineDash([]); ctx.restore()
+    }
+    function dot(x,y,color,size){
+      ctx.beginPath(); ctx.fillStyle=color; ctx.arc(x,y,size||4,0,Math.PI*2); ctx.fill()
+    }
+    function curve(points,color,width){
+      if(points.length<2) return
+      ctx.save(); ctx.beginPath(); ctx.strokeStyle=color; ctx.lineWidth=width
+      ctx.lineJoin='round'; ctx.lineCap='round'; ctx.moveTo(points[0].x,points[0].y)
+      for(let i=0;i<points.length-1;i++){
+        const xc=(points[i].x+points[i+1].x)/2,yc=(points[i].y+points[i+1].y)/2
+        ctx.quadraticCurveTo(points[i].x,points[i].y,xc,yc)
+      }
+      ctx.lineTo(points[points.length-1].x,points[points.length-1].y)
+      ctx.stroke(); ctx.restore()
+    }
+
+    // Symmetry axis
+    line(px[10].x,px[10].y,px[152].x,px[152].y,'rgba(59,130,246,.85)',2,[7,4])
+    label('Axis',(px[10].x+px[152].x)/2+10,px[10].y+20,'#60A5FA')
+
+    // Canthal tilt
+    line(px[33].x,px[33].y,px[133].x,px[133].y,'rgba(234,179,8,.95)',2.5)
+    line(px[263].x,px[263].y,px[362].x,px[362].y,'rgba(234,179,8,.95)',2.5)
+    ;[33,133,263,362].forEach(i=>dot(px[i].x,px[i].y,'#FCD34D',4))
+    const tiltColor=r.avgTilt<-2?'#FCD34D':r.avgTilt<2?'#94A3B8':'#F87171'
+    label((r.avgTilt>=0?'+':'')+r.avgTilt.toFixed(1)+'°',(px[33].x+px[133].x)/2-10,Math.min(px[33].y,px[133].y)-8,tiltColor)
+
+    // Thirds
+    line(px[103].x,px[103].y,px[332].x,px[332].y,'rgba(16,185,129,.85)',1.5,[5,3])
+    line(px[132].x,px[132].y,px[361].x,px[361].y,'rgba(16,185,129,.85)',1.5,[5,3])
+    line(px[152].x-50,px[152].y,px[152].x+50,px[152].y,'rgba(16,185,129,.5)',1.2,[4,4])
+    label('T2',px[332].x+6,px[332].y+4,'#34D399')
+    label('T3',px[361].x+6,px[361].y+4,'#34D399')
+
+    // Jawline
+    const jaw=[234,93,132,58,172,136,150,149,176,148,152,377,400,378,379,365,397,288,361,323,454]
+    curve(jaw.map(i=>px[i]),'rgba(255,255,255,.85)',2.5)
+    dot(px[172].x,px[172].y,'rgba(251,191,36,.9)',5)
+    dot(px[397].x,px[397].y,'rgba(251,191,36,.9)',5)
+    dot(px[152].x,px[152].y,'rgba(255,255,255,.9)',4)
+    label(r.gA.toFixed(0)+'°',px[172].x-30,px[172].y+18,r.gonialScore>7.5?'#FCD34D':'#94A3B8')
+
+    // Cheekbones
+    curve([234,227,116,111,117].map(i=>px[i]),'rgba(167,139,250,.75)',2.5)
+    curve([454,447,345,340,346].map(i=>px[i]),'rgba(167,139,250,.75)',2.5)
+    dot(px[234].x,px[234].y,'#A78BFA',5); dot(px[454].x,px[454].y,'#A78BFA',5)
+    label('CK '+r.cheekR.toFixed(2),(px[234].x+px[454].x)/2-20,px[234].y-12,r.cheekScore>7.5?'#C4B5FD':'#94A3B8')
+
+    // Jaw width
+    line(px[172].x,px[172].y,px[397].x,px[397].y,'rgba(249,115,22,.75)',1.8,[4,3])
+
+    // Midface
+    const eyeMidX=(px[33].x+px[263].x)/2,eyeMidY=(px[33].y+px[263].y)/2
+    line(eyeMidX,eyeMidY,px[1].x,px[1].y,'rgba(236,72,153,.8)',2)
+    label('MF '+r.mfR.toFixed(2),px[1].x+8,(eyeMidY+px[1].y)/2,r.midfaceScore>7.5?'#F9A8D4':'#94A3B8')
+
+    // FWHR
+    line(px[103].x,px[103].y,px[332].x,px[332].y,'rgba(6,182,212,.6)',1.5,[3,3])
+    line(px[58].x,px[58].y,px[288].x,px[288].y,'rgba(6,182,212,.6)',1.5,[3,3])
+    label('FWHR '+r.fwhr.toFixed(2),px[103].x-10,px[58].y+16,r.fwhrScore>7.5?'#67E8F9':'#94A3B8')
+
+    // GR
+    line(px[10].x,px[10].y,px[10].x+20,px[10].y,'rgba(245,158,11,.7)',1.5)
+    line(px[152].x,px[152].y,px[152].x+20,px[152].y,'rgba(245,158,11,.7)',1.5)
+    label('GR '+r.gr.toFixed(2),px[10].x+24,px[10].y+16,r.goldenScore>7.5?'#FCD34D':'#94A3B8')
+
+    // Eye line
+    line(px[33].x,px[33].y,px[263].x,px[263].y,'rgba(6,182,212,.4)',1,[5,3])
+
+    // Nose
+    curve([1,4,5,275,276,2,98,327].map(i=>px[i]),'rgba(239,68,68,.5)',1.5)
+
+    // Lips
+    curve([0,13,14,17,40,39,37,0,267,269,270,409,291,375,321,308,324,318,402,317,14,87,178,88,95].map(i=>px[i]),'rgba(236,72,153,.4)',1.5)
+
+    // Score box
+    const bW=210,bH=72,bX=W-bW-20,bY=20
+    ctx.fillStyle='rgba(0,0,0,.85)'; ctx.beginPath()
+    if(ctx.roundRect) ctx.roundRect(bX,bY,bW,bH,12); else ctx.rect(bX,bY,bW,bH)
+    ctx.fill(); ctx.strokeStyle=r.tier.color; ctx.lineWidth=2; ctx.strokeRect(bX,bY,bW,bH)
+    ctx.textAlign='center'; ctx.textBaseline='middle'
+    ctx.fillStyle=r.tier.color; ctx.font='bold '+Math.max(14,W*0.022)+'px Space Grotesk,sans-serif'
+    ctx.fillText(r.tier.name.toUpperCase(),bX+bW/2,bY+bH*0.38)
+    ctx.fillStyle='#F8FAFC'; ctx.font='bold '+Math.max(18,W*0.028)+'px Space Mono,monospace'
+    ctx.fillText(r.overallScore.toFixed(1)+'/10',bX+bW/2,bY+bH*0.72)
+    ctx.textAlign='left'; ctx.textBaseline='alphabetic'
+  }
+  if(imgEl.complete&&imgEl.naturalWidth>0) go(); else imgEl.onload=go
+}
+
+// ===================== SCAN PROGRESS =====================
+function setScan(pct, status){
+  document.getElementById('scanBar').style.width = pct+'%'
+  document.getElementById('scanPct').textContent = pct+'%'
+  document.getElementById('scanStatus').textContent = status
+}
+
+// ===================== MAIN ANALYSIS =====================
+async function startAnalysis(){
+  if(!uploadedImage) return
+  document.getElementById('scanPhoto').src = uploadedImage
+  showSection('s3')
+  setScan(5,'Loading AI model…')
+
+  try{
+    const imgEl = document.getElementById('scanPhoto')
+    await new Promise(r=>{ if(imgEl.complete&&imgEl.naturalWidth>0)r(); else imgEl.onload=r })
+
+    setScan(20,'Detecting landmarks…')
+    const results = await loadFaceMesh(imgEl)
+    const lms = results.multiFaceLandmarks?.[0]
+    if(!lms||lms.length<478) throw new Error('No face detected. Try a clearer front-facing photo.')
+
+    setScan(45,'Mapping geometry…')
+    await new Promise(r=>setTimeout(r,200))
+    setScan(65,'Computing ratios…')
+    const r = computeAll(lms, imgEl, selectedGender)
+    setScan(85,'Generating report…')
+    await new Promise(r=>setTimeout(r,200))
+    setScan(100,'Analysis complete!')
+    await new Promise(r=>setTimeout(r,400))
+
+    analysisResult = r
+    window.pxData = r.px
+    renderResults(r, imgEl)
+    showSection('s4')
+    playTierAnimation(r.tier, r.overallScore)
+  }catch(e){
+    document.getElementById('errorMsg').textContent = e.message||'Analysis failed. Please try again.'
+    showSection('s5')
+  }
+}
+
+async function startVSAnalysis(){
+  if(!vsImages.p1||!vsImages.p2||!vsGenders.p1||!vsGenders.p2){
+    alert('Please select gender for both persons!')
+    return
+  }
+  window.vsData = {p1: vsImages.p1, p2: vsImages.p2}
+  showSection('s3')
+  setScan(5,'Loading VS analysis…')
+
+  try{
+    const results = []
+    const genders = [vsGenders.p1, vsGenders.p2]
+    for(let i=1;i<=2;i++){
+      setScan(i===1?20:60, `Analyzing Person ${i}…`)
+      const img = new Image()
+      img.src = vsImages['p'+i]
+      await new Promise(r=>{ if(img.complete&&img.naturalWidth>0)r(); else img.onload=r })
+      const fm_res = await loadFaceMesh(img)
+      const lms = fm_res.multiFaceLandmarks?.[0]
+      if(!lms||lms.length<478) throw new Error(`No face detected in Person ${i}'s photo.`)
+      results.push(computeAll(lms, img, genders[i-1]))
+      setScan(i===1?50:90,'Computing metrics…')
+    }
+    vsResults = {p1: results[0], p2: results[1]}
+    setScan(100,'VS analysis complete!')
+    await new Promise(r=>setTimeout(r,400))
+    renderVSResults(results[0], results[1])
+    showSection('s6')
+  }catch(e){
+    document.getElementById('errorMsg').textContent = e.message||'VS analysis failed.'
+    showSection('s5')
+  }
+}
+
+// ===================== RENDER RESULTS =====================
+function renderResults(r, imgEl){
+  // Draw overlay
+  const canvas = document.getElementById('resultCanvas')
+  drawOverlay(r, 'resultCanvas', imgEl)
+
+  // Score ring animation
+  const circumference = 552.9
+  const offset = circumference - (r.overallScore/10)*circumference
+  const ring = document.getElementById('ringFill')
+  ring.style.stroke = r.tier.color
+  ring.style.strokeDashoffset = circumference
+  setTimeout(()=>{ ring.style.transition='stroke-dashoffset 1.5s ease'; ring.style.strokeDashoffset=offset },100)
+
+  // Count up score
+  const numEl = document.getElementById('scoreNum')
+  numEl.style.color = r.tier.color
+  let n=0; const target=r.overallScore; const step=target/60
+  const iv=setInterval(()=>{ n=Math.min(n+step,target); numEl.textContent=n.toFixed(1); if(n>=target)clearInterval(iv) },25)
+
+  // Tier badge
+  const tb = document.getElementById('tierBadge')
+  tb.textContent = r.tier.name.toUpperCase()
+  tb.style.background = r.tier.color+'22'
+  tb.style.color = r.tier.color
+  tb.style.border = '1px solid '+r.tier.color+'55'
+
+  // Face shape
+  document.getElementById('faceShapeTag').textContent = r.faceShape+' Face'
+  document.getElementById('headPoseTag').textContent = `P:${r.pitch.toFixed(1)}° Y:${r.yaw.toFixed(1)}° R:${r.roll.toFixed(1)}°`
+
+  // All named metrics
+  const allM = [
+    {name:'Hunter Eyes',score:r.hunterScore,tag:r.canthalLabel},
+    {name:'Jaw Definition',score:r.jawDefScore,tag:r.gA.toFixed(0)+'°'},
+    {name:'Midface Balance',score:r.midfaceScore,tag:r.mfR.toFixed(2)},
+    {name:'FWHR',score:r.fwhrScore,tag:r.fwhrLabel},
+    {name:'Cheekbones',score:r.cheekScore,tag:r.cheekR.toFixed(2)},
+    {name:'Symmetry',score:r.symmetryScore,tag:(r.symRMS*100).toFixed(1)+'% err'},
+    {name:'Golden Ratio',score:r.goldenScore,tag:r.gr.toFixed(2)},
+    {name:'Orbital Vector',score:r.orbScore},
+    {name:'Skin Quality',score:r.skinScore},
+    {name:'Facial Thirds',score:r.thirdsScore},
+    {name:'Facial Fifths',score:r.fifthsScore},
+  ]
+  const sorted=[...allM].sort((a,b)=>b.score-a.score)
+  document.getElementById('strongName').textContent=sorted[0].name
+  document.getElementById('strongScore').textContent=sorted[0].score.toFixed(1)+'/10'
+  document.getElementById('weakName').textContent=sorted[sorted.length-1].name
+  document.getElementById('weakScore').textContent=sorted[sorted.length-1].score.toFixed(1)+'/10'
+
+  // Pillars
+  const pillars = [
+    {
+      title:'HARMONY', color:'#3B82F6', icon:'◈',
+      metrics:[
+        {name:'Golden Ratio',score:r.goldenScore,tag:r.gr.toFixed(2),desc:'Face H/W vs φ=1.618'},
+        {name:'Facial Symmetry',score:r.symmetryScore,tag:(r.symRMS*100).toFixed(1)+'% error',desc:'Landmark mirror accuracy'},
+        {name:'Facial Thirds',score:r.thirdsScore,desc:'Equal upper/mid/lower thirds'},
+        {name:'Facial Fifths',score:r.fifthsScore,desc:'Eye width as 1/5 of face width'},
+        {name:'Face Proportion',score:r.fwhrScore,tag:'FWHR '+r.fwhr.toFixed(2),desc:'Bizygomatic to upper-face height'},
+      ]
+    },
+    {
+      title:'ANGULARITY', color:'#F59E0B', icon:'◆',
+      metrics:[
+        {name:'Hunter Eyes',score:r.hunterScore,tag:r.canthalLabel,desc:'Canthal tilt + brow ridge + lid',
+          sub:[{name:'Canthal Tilt',score:r.canthalScore},{name:'Brow Ridge',score:r.browScore},{name:'Lid Exposure',score:r.lidScore}]},
+        {name:'Jaw Strength',score:r.jawDefScore,tag:r.gA.toFixed(0)+'°',desc:'Gonial angle + mandibular plane',
+          sub:[{name:'Gonial Angle',score:r.gonialScore},{name:'Mandibular Plane',score:r.mandScore},{name:'Chin Projection',score:r.chinScore}]},
+        {name:'Cheekbones',score:r.cheekScore,tag:'CK '+r.cheekR.toFixed(2),desc:'Bizyg/bigonial ratio'},
+        {name:'Dimorphism',score:r.dimorphScore,desc:'Sexual differentiation markers'},
+        {name:'Forward Growth',score:r.forwardGrowthScore,desc:'Midface projection depth'},
+      ]
+    },
+    {
+      title:'PROPORTIONS', color:'#8B5CF6', icon:'◇',
+      metrics:[
+        {name:'Compactness',score:r.compactnessScore,desc:'H/W ideal 1.3–1.45'},
+        {name:'Midface Balance',score:r.midfaceScore,tag:'MF '+r.mfR.toFixed(2),desc:'Nose tip to eye midpoint ratio'},
+        {name:'Eye Shape',score:r.eyeScore,tag:r.eyeLabel,desc:'H/W ratio of eye aperture'},
+        {name:'Nose Proportions',score:r.noseScore,desc:'Nose width vs face width/5'},
+        {name:'Mouth Symmetry',score:r.mouthScore,desc:'Mouth vs nose golden ratio'},
+        {name:'Lip Balance',score:r.lipScore,desc:'Upper to lower lip ratio'},
+        {name:'Eye Spacing',score:r.ipdScore,tag:r.ipdR.toFixed(2),desc:'IPD/FW ideal 0.43–0.49'},
+      ]
+    },
+    {
+      title:'HEALTH', color:'#10B981', icon:'◉',
+      metrics:[
+        {name:'Skin Quality',score:r.skinScore,desc:'Texture uniformity analysis'},
+        {name:'Facial Definition',score:r.faceFatScore,desc:'Cheek-to-jaw tapering'},
+        {name:'Jaw Angle',score:r.gonialScore,tag:r.gA.toFixed(0)+'°',desc:'112–128° ideal gonial range'},
+        {name:'Orbital Vector',score:r.orbScore,desc:'Infraorbital rim to cornea depth'},
+      ]
+    }
+  ]
+
+  const container = document.getElementById('pillarsContainer')
+  container.innerHTML = ''
+  pillars.forEach(p=>{
+    const avg=(p.metrics.reduce((a,m)=>a+m.score,0)/p.metrics.length).toFixed(1)
+    const el=document.createElement('div'); el.className='pillar'
+    el.innerHTML=`<div class="pillar-header" onclick="togglePillar(this)">
+      <div class="pillar-dot" style="background:${p.color}"></div>
+      <div class="pillar-title">${p.icon} ${p.title}</div>
+      <div class="pillar-avg" style="color:${p.color}">${avg}</div>
+      <div class="pillar-chevron">▼</div>
+    </div>
+    <div class="pillar-body">${p.metrics.map(m=>buildMetricHTML(m,p.color)).join('')}</div>`
+    container.appendChild(el)
+  })
+
+  // Animate bars after render
+  setTimeout(()=>{
+    document.querySelectorAll('.metric-bar').forEach(b=>{
+      b.style.width = b.dataset.w+'%'
+    })
+  },300)
+
+  // Radar
+  renderRadar(r)
+
+  // Biometric
+  renderBiometric(r)
+  renderTips(r)
+  renderTierTable(r)
+}
+
+function buildMetricHTML(m, color){
+  const barColor = m.score>=7.5?color:m.score>=6?'#3B82F6':m.score>=4?'#94A3B8':'#EF4444'
+  
+  // Add low confidence / estimated tags
+  let displayName = m.name
+  if (displayName === 'Skin Quality') {
+    displayName += ' <span class="metric-tag" style="font-size:0.7rem;">(low confidence)</span>'
+  } else if (['Forward Growth', 'Chin Projection', 'Brow Ridge'].includes(displayName)) {
+    displayName += ' <span class="metric-tag" style="font-size:0.7rem;">(est.)</span>'
+  }
+  
+  // Handle submetrics too
+  const subHTML = m.sub?`<div class="sub-metrics">${m.sub.map(s=>{
+    let subName = s.name
+    if (['Brow Ridge', 'Chin Projection'].includes(subName)) {
+      subName += ' (est.)'
+    }
+    return `<div style="display:flex;justify-content:space-between;font-size:.75rem;color:var(--sub)"><span>${subName}</span><span style="font-family:'Space Mono',monospace;font-weight:700">${s.score.toFixed(1)}</span></div>`
+  }).join('')}</div>`:''
+  
+  return `<div class="metric-row">
+    <div class="metric-top">
+      <div class="metric-name">${displayName}${m.tag?`<span class="metric-tag">${m.tag}</span>`:''}</div>
+      <div class="metric-right">
+        <div class="metric-score" style="color:${barColor}">${m.score.toFixed(1)}</div>
+        <div class="sigma-tag">${sigmaLabel(m.score)}</div>
+      </div>
+    </div>
+    <div class="metric-bar-bg"><div class="metric-bar" style="background:${barColor}" data-w="${m.score*10}"></div></div>
+    ${m.desc?`<div class="metric-desc">${m.desc}</div>`:''}
+    ${subHTML}
+  </div>`
+}
+
+function togglePillar(header){
+  const body=header.nextElementSibling
+  const ch=header.querySelector('.pillar-chevron')
+  const open=body.style.display!=='none'
+  body.style.display=open?'none':'flex'
+  ch.style.transform=open?'rotate(-90deg)':''
+}
+
+function renderRadar(r){
+  if(radarChartInst){ radarChartInst.destroy(); radarChartInst=null }
+  const ctx2=document.getElementById('radarChart').getContext('2d')
+  radarChartInst=new Chart(ctx2,{
+    type:'radar',
+    data:{
+      labels:['Hunter','Jaw','FWHR','Symmetry','Midface','Golden','Cheekbone','Clarity'],
+      datasets:[{
+        label:r.tier.name,
+        data:[r.hunterScore,r.jawDefScore,r.fwhrScore,r.symmetryScore,r.midfaceScore,r.goldenScore,r.cheekScore,r.skinScore],
+        backgroundColor:'rgba(124,58,237,.2)',borderColor:'#7C3AED',pointBackgroundColor:'#7C3AED',borderWidth:2,pointRadius:4
+      }]
+    },
+    options:{
+      responsive:true,scales:{r:{min:0,max:10,ticks:{stepSize:2,color:'#64748B',font:{size:10}},grid:{color:'rgba(255,255,255,.06)'},pointLabels:{color:'#94A3B8',font:{size:11}},angleLines:{color:'rgba(255,255,255,.06)'}}},
+      plugins:{legend:{labels:{color:'#94A3B8'}}}
+    }
+  })
+}
+
+function renderBiometric(r){
+  const el=document.getElementById('biometricSection')
+  const strong = r.hunterScore>7?'hunter eye complex':'jaw definition'
+  let scoreNote = ''
+  if (r.scoreCapped) {
+    scoreNote = `<div style="margin-top:.5rem;font-size:.75rem;color:#A78BFA;font-family:var(--mono)">⚠️ Score was capped for high-end normalization (raw: ${r.rawScore.toFixed(2)})</div>`
+  }
+  el.innerHTML=`<div class="section-title">📋 Biometric Report</div>
+  <div class="bio-label">SUMMARY</div>
+  <div class="bio-summary">Subject presents a ${r.tier.name} phenotype with ${r.overallScore.toFixed(1)}/10 composite facial geometry. ${r.faceShape} face shape with ${r.canthalLabel.toLowerCase()} (${r.avgTilt.toFixed(1)}°). Primary strength: ${strong}.</div>${scoreNote}
+  <div style="margin-top:.75rem"><div class="bio-label">KEY FACTORS</div>
+  <div class="bio-list">
+    <div class="bio-item"><div class="bio-dot"></div>FWHR ${r.fwhr.toFixed(2)} — ${r.fwhrLabel} dominance index</div>
+    <div class="bio-item"><div class="bio-dot"></div>Gonial angle ${r.gA.toFixed(1)}° — ${r.gA>=112&&r.gA<=128?'within':'outside'} optimal 112–128° range</div>
+    <div class="bio-item"><div class="bio-dot"></div>Cheekbone prominence CK ${r.cheekR.toFixed(2)} — ${r.cheekR>=1.15&&r.cheekR<=1.35?'ideal':'suboptimal'} ratio</div>
+    <div class="bio-item"><div class="bio-dot"></div>Symmetry error ${(r.symRMS*100).toFixed(1)}% RMS deviation</div>
+    <div class="bio-item"><div class="bio-dot"></div>Midface ratio ${r.mfR.toFixed(3)} — ${r.mfR>=0.29&&r.mfR<=0.33?'balanced':'imbalanced'}</div>
+    <div class="bio-item"><div class="bio-dot" style="background:#F59E0B"></div>⚠️ Z-axis dependent scores (brow ridge, chin projection, forward growth) have lower confidence</div>
+  </div></div>
+  <div style="margin-top:.75rem"><div class="bio-label">LIMITATIONS</div>
+  <div class="bio-list">
+    <div class="bio-item"><div class="bio-dot"></div>2D photo limits Z-axis (depth) accuracy</div>
+    <div class="bio-item"><div class="bio-dot"></div>Lighting conditions affect skin score reliability</div>
+    <div class="bio-item"><div class="bio-dot"></div>Head pose ${r.pitch.toFixed(1)}° may introduce measurement variance</div>
+  </div></div>
+  <div class="confidence-bar">
+    <div class="conf-label">Confidence</div>
+    <div class="conf-bar-bg"><div class="conf-bar-fill" style="width:${r.detectionConfidence}%"></div></div>
+    <div class="conf-pct">${r.detectionConfidence.toFixed(0)}%</div>
+  </div>`
+}
+
+function renderTips(r){
+  const el=document.getElementById('tipsSection')
+  const tips={
+    'Hunter Eyes':['Incorporate mewing for midface development','Consider eye exposure exercises','Reduce body fat to improve periorbital definition'],
+    'Jaw Definition':['Mewing and proper tongue posture for jaw development','Reduce sodium intake to decrease facial bloating','Chewing mastic gum for masseter development'],
+    'Symmetry':['Chew equally on both sides','Sleep on your back to reduce asymmetry','Correct posture — head tilt compounds over time'],
+    'Cheekbones':['Low body fat % reveals natural cheekbone structure','Facial exercises target zygomatic prominence','Contouring for immediate visual effect'],
+    'Skin Quality':['Consistent SPF 30+ use prevents photoaging','Retinol + niacinamide routine for texture','Hydration: minimum 2L water daily'],
+  }
+  const allM2=[
+    {name:'Hunter Eyes',score:r.hunterScore},{name:'Jaw Definition',score:r.jawDefScore},
+    {name:'Symmetry',score:r.symmetryScore},{name:'Cheekbones',score:r.cheekScore},
+    {name:'Skin Quality',score:r.skinScore}
+  ]
+  const lowest=allM2.sort((a,b)=>a.score-b.score)[0]
+  const tipList=tips[lowest.name]||tips['Skin Quality']
+  el.innerHTML=`<div class="section-title">💡 Improvement Protocol</div>
+  <div style="font-size:.8rem;color:var(--sub);margin-bottom:.75rem">Targeting: <strong style="color:var(--text)">${lowest.name}</strong> (${lowest.score.toFixed(1)}/10)</div>
+  ${tipList.map(t=>`<div class="bio-item" style="margin-bottom:.5rem"><div class="bio-dot" style="background:var(--gold);margin-top:.35rem"></div><span style="font-size:.83rem;color:var(--sub)">${t}</span></div>`).join('')}`
+}
+
+function renderTierTable(r){
+  const el=document.getElementById('tierTable')
+  const tiers_m=[[9.5,10,'True Adam','#DC2626','top 0.1%'],[8.5,9.5,'Chad','#F59E0B','top 1%'],[7.5,8.5,'Chadlite','#8B5CF6','top 5%'],[7.0,7.5,'HTN','#6366F1','top 15%'],[6.0,7.0,'MTN','#10B981','top 35%'],[5.0,6.0,'LTN','#3B82F6','top 55%'],[3.5,5.0,'Sub 5','#6B7280','below avg'],[0,3.5,'Sub 3','#4B5563','bottom 5%']]
+  const tiers_f=[[9.5,10,'True Eve','#DC2626','top 0.1%'],[8.5,9.5,'Stacy','#EC4899','top 1%'],[7.5,8.5,'Stacylite','#8B5CF6','top 5%'],[7.0,7.5,'HTB','#6366F1','top 15%'],[6.0,7.0,'MTB','#10B981','top 35%'],[5.0,6.0,'LTB','#3B82F6','top 55%'],[3.5,5.0,'Sub 5','#6B7280','below avg'],[0,3.5,'Sub 3','#4B5563','bottom 5%']]
+  const tiers = r.gender==='male'?tiers_m:tiers_f
+  el.innerHTML=`<div style="padding:1rem 1.5rem .5rem;font-size:.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--sub)">Tier Reference</div>`+
+  tiers.map(([min,max,name,color,pct])=>`<div class="tier-row${r.overallScore>=min&&r.overallScore<max?' current':''}">
+    <div class="tier-dot" style="background:${color}"></div>
+    <div class="tier-name-cell" style="color:${color}">${name}</div>
+    <div class="tier-range">${min}–${max}</div>
+    <div class="tier-pct">${pct}</div>
+  </div>`).join('')
+}
+
+// ===================== TIER ANIMATIONS =====================
+function playTierAnimation(tier, score){
+  const overlay = document.getElementById('animOverlay')
+  const text = document.getElementById('animText')
+  const pCanvas = document.getElementById('particleCanvas')
+  pCanvas.width=innerWidth; pCanvas.height=innerHeight
+  const pCtx = pCanvas.getContext('2d')
+
+  const name = tier.name.toUpperCase()
+  const color = tier.color
+
+  if(name==='TRUE ADAM'||name==='TRUE EVE'){
+    overlay.style.background='rgba(0,0,0,.7)'
+    text.textContent='👑 '+name; text.style.color=color
+    overlay.classList.add('active')
+    gsap.fromTo(text,{opacity:0,scale:0.5},{opacity:1,scale:1.2,duration:.6,ease:'back.out'})
+    spawnParticles(pCtx,'✨',color,120)
+    setTimeout(()=>{ overlay.classList.remove('active'); pCtx.clearRect(0,0,pCanvas.width,pCanvas.height) },3000)
+  } else if(name==='CHAD'||name==='STACY'){
+    overlay.style.background='rgba(239,68,68,.12)'
+    text.textContent=(name==='CHAD'?'CHAD':'STACY')+' DETECTED 🔥'; text.style.color=color
+    overlay.classList.add('active')
+    gsap.fromTo(text,{opacity:0,y:40},{opacity:1,y:0,duration:.5})
+    spawnParticles(pCtx,'🔥',color,80)
+    setTimeout(()=>{ overlay.classList.remove('active'); pCtx.clearRect(0,0,pCanvas.width,pCanvas.height) },3000)
+  } else if(name==='CHADLITE'||name==='STACYLITE'){
+    gsap.fromTo('#s4',{x:0},{x:8,duration:.05,repeat:8,yoyo:true})
+    gsap.fromTo('.score-num',{rotation:0},{rotation:360,duration:.6,delay:.1})
+    spawnParticles(pCtx,'✦',color,50)
+    setTimeout(()=>pCtx.clearRect(0,0,pCanvas.width,pCanvas.height),2000)
+  } else if(name==='SUB 3'){
+    document.getElementById('crackOverlay').style.opacity='1'
+    overlay.style.background='rgba(0,0,0,.4)'
+    text.textContent='💀'; text.style.color='#EF4444'; text.style.fontSize='5rem'
+    overlay.classList.add('active')
+    gsap.fromTo(text,{opacity:0,scale:2},{opacity:1,scale:1,duration:.5})
+    spawnParticles(pCtx,'💀',color,40)
+    setTimeout(()=>{ overlay.classList.remove('active'); document.getElementById('crackOverlay').style.opacity='0'; pCtx.clearRect(0,0,pCanvas.width,pCanvas.height) },3500)
+  }
+}
+
+function spawnParticles(ctx, emoji, color, count){
+  const canvas=ctx.canvas
+  const particles=[]
+  for(let i=0;i<count;i++){
+    particles.push({
+      x:Math.random()*canvas.width, y:-20,
+      vx:(Math.random()-.5)*3, vy:Math.random()*4+2,
+      rot:Math.random()*360, rotV:(Math.random()-.5)*10,
+      size:Math.random()*20+12, alpha:1
+    })
+  }
+  let frame=0
+  function tick(){
+    ctx.clearRect(0,0,canvas.width,canvas.height)
+    particles.forEach(p=>{
+      p.x+=p.vx; p.y+=p.vy; p.rot+=p.rotV; p.alpha-=0.008
+      ctx.save(); ctx.globalAlpha=Math.max(0,p.alpha)
+      ctx.font=p.size+'px serif'
+      ctx.fillText(emoji,p.x,p.y)
+      ctx.restore()
+    })
+    frame++; if(frame<200) requestAnimationFrame(tick)
+  }
+  tick()
+}
+
+// ===================== VS RESULTS =====================
+function renderVSResults(r1, r2){
+  // Canvases
+  ;[[r1,'vsResCanvas1',vsImages.p1],[r2,'vsResCanvas2',vsImages.p2]].forEach(([r,cid,src])=>{
+    const img=new Image(); img.src=src
+    img.onload=()=>drawOverlay(r,cid,img)
+  })
+
+  // Scores
+  const winner = r1.overallScore>=r2.overallScore?1:2
+  document.getElementById('vsScore1Display').textContent=r1.overallScore.toFixed(1)+'/10'
+  document.getElementById('vsScore1Display').style.color=r1.tier.color
+  document.getElementById('vsScore2Display').textContent=r2.overallScore.toFixed(1)+'/10'
+  document.getElementById('vsScore2Display').style.color=r2.tier.color
+  document.getElementById('vsWinnerName').textContent=`Person ${winner} — ${(winner===1?r1:r2).tier.name} (${(winner===1?r1:r2).overallScore.toFixed(1)})`
+
+  // Compare table
+  const el=document.getElementById('vsCompareTable')
+  const rows=[
+    ['Overall',r1.overallScore.toFixed(1),r2.overallScore.toFixed(1)],
+    ['Tier',r1.tier.name,r2.tier.name],
+    ['Hunter Eyes',r1.hunterScore.toFixed(1),r2.hunterScore.toFixed(1)],
+    ['Jaw',r1.jawDefScore.toFixed(1),r2.jawDefScore.toFixed(1)],
+    ['Cheekbones',r1.cheekScore.toFixed(1),r2.cheekScore.toFixed(1)],
+    ['Symmetry',r1.symmetryScore.toFixed(1),r2.symmetryScore.toFixed(1)],
+    ['Golden Ratio',r1.goldenScore.toFixed(1),r2.goldenScore.toFixed(1)],
+    ['Midface',r1.midfaceScore.toFixed(1),r2.midfaceScore.toFixed(1)],
+    ['Face Shape',r1.faceShape,r2.faceShape],
+  ]
+  el.innerHTML=`<div class="vs-trow header"><div class="vs-cell-l">P1</div><div class="vs-cell-mid">METRIC</div><div class="vs-cell-r">P2</div></div>`+
+  rows.map(([label,v1,v2])=>{
+    const n1=parseFloat(v1),n2=parseFloat(v2)
+    const c1=!isNaN(n1)&&n1>n2?'var(--gold)':'var(--text)'
+    const c2=!isNaN(n2)&&n2>n1?'var(--gold)':'var(--text)'
+    return `<div class="vs-trow"><div class="vs-cell-l" style="color:${c1}">${v1}</div><div class="vs-cell-mid">${label}</div><div class="vs-cell-r" style="color:${c2}">${v2}</div></div>`
+  }).join('')
+
+  // VS radar
+  if(vsRadarChartInst){ vsRadarChartInst.destroy(); vsRadarChartInst=null }
+  const ctx3=document.getElementById('vsRadarChart').getContext('2d')
+  vsRadarChartInst=new Chart(ctx3,{
+    type:'radar',
+    data:{
+      labels:['Hunter','Jaw','FWHR','Symmetry','Midface','Golden','Cheekbone','Clarity'],
+      datasets:[
+        {label:'Person 1',data:[r1.hunterScore,r1.jawDefScore,r1.fwhrScore,r1.symmetryScore,r1.midfaceScore,r1.goldenScore,r1.cheekScore,r1.skinScore],backgroundColor:'rgba(124,58,237,.2)',borderColor:'#7C3AED',borderWidth:2,pointRadius:4},
+        {label:'Person 2',data:[r2.hunterScore,r2.jawDefScore,r2.fwhrScore,r2.symmetryScore,r2.midfaceScore,r2.goldenScore,r2.cheekScore,r2.skinScore],backgroundColor:'rgba(236,72,153,.15)',borderColor:'#EC4899',borderWidth:2,pointRadius:4}
+      ]
+    },
+    options:{responsive:true,scales:{r:{min:0,max:10,ticks:{stepSize:2,color:'#64748B',font:{size:10}},grid:{color:'rgba(255,255,255,.06)'},pointLabels:{color:'#94A3B8',font:{size:11}},angleLines:{color:'rgba(255,255,255,.06)'}}},plugins:{legend:{labels:{color:'#94A3B8'}}}}
+  })
+}
+
+// ===================== SHARE CARD =====================
+function generateShareCard(){
+  const r = analysisResult; if(!r) return
+  const c = document.getElementById('shareCanvas')
+  const ctx = c.getContext('2d')
+  c.width=1080; c.height=1080
+  // BG
+  ctx.fillStyle='#0A0A0F'; ctx.fillRect(0,0,1080,1080)
+  const grd=ctx.createLinearGradient(0,0,1080,1080)
+  grd.addColorStop(0,'rgba(124,58,237,.3)'); grd.addColorStop(1,'rgba(236,72,153,.3)')
+  ctx.fillStyle=grd; ctx.fillRect(0,0,1080,1080)
+  // Border
+  ctx.strokeStyle=r.tier.color; ctx.lineWidth=4; ctx.strokeRect(20,20,1040,1040)
+  // Logo
+  ctx.fillStyle='rgba(124,58,237,.3)'; ctx.beginPath()
+  if(ctx.roundRect) ctx.roundRect(390,40,300,50,25); else ctx.rect(390,40,300,50)
+  ctx.fill()
+  ctx.fillStyle='#A78BFA'; ctx.font='bold 20px Space Grotesk,sans-serif'; ctx.textAlign='center'
+  ctx.fillText('MOGGCHECK AI · FACE ANALYSIS',540,72)
+  // Score
+  ctx.fillStyle=r.tier.color; ctx.font='bold 200px Space Mono,monospace'; ctx.textAlign='center'
+  ctx.fillText(r.overallScore.toFixed(1),540,580)
+  ctx.fillStyle='rgba(248,250,252,.4)'; ctx.font='bold 50px Space Grotesk,sans-serif'
+  ctx.fillText('/10',540,640)
+  // Tier
+  ctx.fillStyle=r.tier.color; ctx.font='bold 80px Space Grotesk,sans-serif'
+  ctx.fillText(r.tier.name.toUpperCase(),540,760)
+  // Top metrics
+  const metrics=[['Hunter',r.hunterScore],['Jaw',r.jawDefScore],['Symmetry',r.symmetryScore]]
+  metrics.forEach(([n,s],i)=>{
+    const x=180+i*360; const y=880
+    ctx.fillStyle='rgba(255,255,255,.06)'; ctx.beginPath()
+    if(ctx.roundRect) ctx.roundRect(x-100,y-50,200,80,12); else ctx.rect(x-100,y-50,200,80)
+    ctx.fill()
+    ctx.fillStyle=s>=7.5?r.tier.color:'#94A3B8'; ctx.font='bold 36px Space Mono,monospace'
+    ctx.fillText(s.toFixed(1),x,y)
+    ctx.fillStyle='#64748B'; ctx.font='14px Space Grotesk,sans-serif'
+    ctx.fillText(n.toUpperCase(),x,y+28)
+  })
+  // Domain
+  ctx.fillStyle='rgba(148,163,184,.5)'; ctx.font='24px Space Grotesk,sans-serif'
+  ctx.fillText('moggcheck.com',540,1040)
+
+  const img=document.getElementById('shareImg')
+  img.src=c.toDataURL('image/png')
+  document.getElementById('sharePreview').style.display='block'
+  document.getElementById('downloadBtn').style.display='inline-block'
+}
+
+function downloadShare(){
+  const a=document.createElement('a')
+  a.href=document.getElementById('shareCanvas').toDataURL('image/png')
+  a.download='moggcheck-result.png'; a.click()
+}
+
+// ===================== LEGAL MODALS =====================
+const legalPages={
+  about:`<p>MoggCheck is an AI-powered facial analysis tool that uses MediaPipe FaceMesh to compute geometric ratios and provide looksmaxxing tier assessments. All processing is done locally in your browser — no images are ever uploaded to any server.</p>`,
+  privacy:`<p>MoggCheck does not collect, store, or transmit any personal data or images. All face analysis is performed entirely in your browser using JavaScript. We do not use cookies for tracking purposes.</p>`,
+  terms:`<p>MoggCheck is provided for entertainment and educational purposes only. Results are not medical advice. By using this tool you agree that scores are algorithmic estimates and not definitive evaluations of attractiveness.</p>`,
+  tier:`<ul style="list-style:none;display:flex;flex-direction:column;gap:.75rem"><li><strong style="color:#DC2626">True Adam/Eve</strong> — Top 0.1%. Genetically exceptional facial geometry.</li><li><strong style="color:#F59E0B">Chad/Stacy</strong> — Top 1%. Highly attractive, above social dominance threshold.</li><li><strong style="color:#8B5CF6">Chadlite/Stacylite</strong> — Top 5%. Notably above average attractiveness.</li><li><strong style="color:#6366F1">HTN/HTB</strong> — High Tier Normie/Basicette. Top 15%.</li><li><strong style="color:#10B981">MTN/MTB</strong> — Mid Tier Normie. Average to slightly above average.</li><li><strong style="color:#3B82F6">LTN/LTB</strong> — Low Tier Normie. Slightly below average.</li><li><strong style="color:#6B7280">Sub 5</strong> — Below average.</li><li><strong style="color:#4B5563">Sub 3</strong> — Significant below-average markers.</li></ul>`,
+  dmca:`<p>For DMCA or copyright concerns, contact: dmca@moggcheck.com</p>`
+}
+function openLegal(page){
+  document.getElementById('legalTitle').textContent=page.toUpperCase()
+  document.getElementById('legalContent').innerHTML=legalPages[page]||''
+  document.getElementById('legalModal').classList.add('open')
+}
+function closeLegal(){ document.getElementById('legalModal').classList.remove('open') }
+
+// ===================== UTILS =====================
+function retake(){
+  uploadedImage=null; vsImages={p1:null,p2:null}; vsReady={p1:false,p2:false}; vsGenders={p1:null,p2:null}
+  document.getElementById('previewBox').style.display='none'
+  document.getElementById('dropZone').style.display='flex'
+  document.getElementById('analyzeBtn').style.display='none'
+  document.getElementById('vsAnalyzeBtn').style.display='none'
+  document.getElementById('vsPrev1').style.display='none'
+  document.getElementById('vsPrev2').style.display='none'
+  document.getElementById('downloadBtn').style.display='none'
+  document.getElementById('sharePreview').style.display='none'
+  if(radarChartInst){ radarChartInst.destroy(); radarChartInst=null }
+  if(vsRadarChartInst){ vsRadarChartInst.destroy(); vsRadarChartInst=null }
+  
+  // Reset VS gender button styles for both persons
+  for (let num of [1,2]) {
+    const btnMale = document.getElementById('vsGender'+num+'Male')
+    const btnFemale = document.getElementById('vsGender'+num+'Female')
+    if (btnMale && btnFemale) {
+      btnMale.style.background = 'var(--bg2)'
+      btnMale.style.color = 'var(--text)'
+      btnMale.style.border = '1px solid var(--border)'
+      btnFemale.style.background = 'var(--bg2)'
+      btnFemale.style.color = 'var(--text)'
+      btnFemale.style.border = '1px solid var(--border)'
+    }
+  }
+  
+  showSection('s2')
+}
+
+// Init: show solo upload area
+setMode('solo')
+</script>
+</body>
+</html>
